@@ -1,41 +1,146 @@
-import React from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import { BrowserProvider, toBigInt } from 'ethers';
+import { useState, useEffect, useCallback } from 'react';
+import { useToast } from '@chakra-ui/react';
+
+import Header from './Header';
+import DiplomasDisplay from './DiplomasDisplay';
+import ContractService from "./collection/ContractService";
 
 function App() {
+
+  const [provider, setProvider] = useState(null);
+  const [contractService, setContractService] = useState(null);
+  const [stateChanger, setStateChanger] = useState(null);
+  const [list, setList] = useState([]);
+  const [user, setUser] = useState({
+    signer: null,
+    balance: 0,
+    isAdmin: false,
+    isUR: false //is the user University Representative meaning he can add new diplomas
+  });
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  const toast = useToast({
+    position: 'top',
+    isClosable: true,
+    duration: 3000,
+  });
+
+  useEffect(() => {
+    const setupProvider = async () => {
+      if (window.ethereum) {
+        const provider = new BrowserProvider(window.ethereum);
+        setProvider(provider);
+      }
+    };
+
+    setupProvider();
+  }, []);
+
+  useEffect(() => {
+    if (provider) {
+      loadAccounts();
+
+      // const _contractService = new ContractService(provider.getSigner());
+      // _contractService.getDiplomas().then(_list => {
+      //   setList(_list);
+      //   console.log(_list);
+      //   console.log(user);
+      // });
+      // setContractService(_contractService);
+
+      window.ethereum.on('accountsChanged', accounts => {
+        updateAccounts(accounts);
+      });
+
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+      });
+
+      return () => {
+        window.ethereum?.removeAllListeners();
+      };
+    }
+  }, [provider]);
+
+  const loadAccounts = async () => {
+    const accounts = await provider.send('eth_accounts', []);
+    updateAccounts(accounts);
+
+  };
+
+  const updateAccounts = async accounts => {
+    if (provider) {
+      if (accounts && accounts.length > 0) {
+        
+        var isAdmin = false;
+        var isUR = false;
+
+        const _contractService = new ContractService(await provider.getSigner());
+        _contractService.getDiplomas().then(_list => {
+          setList(_list[2]);
+          console.log(_list);
+          isAdmin = _list[0];
+          isUR = _list[1];
+        });
+        setContractService(_contractService);
+        
+        setUser({
+          signer: await provider.getSigner(),
+          balance: await provider.getBalance(accounts[0]),
+          isAdmin: isAdmin,
+          isUR: isUR
+        });
+
+        // setStateChanger(new StateChanger(await provider.getSigner()));
+      } else {
+        setUser({ signer: null, balance: 0 });
+      }
+    }
+  };
+
+  const handleConnectWallet = async () => {
+    // setIsMinting(true);
+    setIsConnecting(true);
+
+    try {
+      const accounts = await provider.send('eth_requestAccounts', []);
+      toast({ title: 'Wallet connected', status: 'success' });
+      updateAccounts(accounts);
+    } catch (error) {
+      toast({
+        title: 'Wallet connection failed',
+        status: 'error',
+        description: error.code,
+      });
+    }
+
+    setIsConnecting(false);
+    // setIsMinting(false);
+  };
+
+
   return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
-      </Box>
-    </ChakraProvider>
+    <>
+      <Header
+        user={user}
+        isConnecting={isConnecting}
+        // isMinting={isMinting}
+        handleConnect={handleConnectWallet}
+      />
+
+      {list.length > 0 && <DiplomasDisplay list={list} />}
+      {list.length == 0 && (
+        <>
+          <div
+            style={{
+              paddingTop: '100px',
+            }}
+          ></div>
+          <p>AAAAA</p>
+        </>
+      )}
+    </>
   );
 }
 

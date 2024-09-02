@@ -1,0 +1,180 @@
+[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "acceptDiplome",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newAdmin",
+				"type": "address"
+			}
+		],
+		"name": "addAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "diplomeIPFSLink",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "universityName",
+				"type": "string"
+			}
+		],
+		"name": "addDiploma",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newUR",
+				"type": "address"
+			}
+		],
+		"name": "addUniversityRepresentative",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getDiplomas",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "bool",
+						"name": "isAdmin",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isUniversityRepresentative",
+						"type": "bool"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "diplomeID",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "diplomeDate",
+								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "isVerified",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "isSuspended",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "universityName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "diplomeIPFSLink",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "comment",
+								"type": "string"
+							}
+						],
+						"internalType": "struct DiplomasContract.Diplome[]",
+						"name": "diplomas",
+						"type": "tuple[]"
+					}
+				],
+				"internalType": "struct DiplomasContract.ReturnData",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "removeAdminAddress",
+				"type": "address"
+			}
+		],
+		"name": "removeAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "ure",
+				"type": "address"
+			}
+		],
+		"name": "removeUniversityRepresentative",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "comment",
+				"type": "string"
+			}
+		],
+		"name": "suspendDiplome",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]
