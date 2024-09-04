@@ -20,6 +20,7 @@ const Header = ({
     isConnecting,
     isMinting,
     handleConnect,
+    handleCreateDiploma
 }) => {
     const {
         isOpen: isCreateOpen,
@@ -52,6 +53,7 @@ const Header = ({
             <HStack spacing={6}>
                 {user.isUR && (
                     <Button
+                        // colorScheme='cyan'
                         size={{ base: 'md', md: 'lg', lg: 'lg' }}
                         w={200}
                         m={2}
@@ -133,7 +135,7 @@ const Header = ({
             <CreateModal
                 isOpen={isCreateOpen}
                 onClose={onCloseCreate}
-                // onCreate={handleCreateNFT}
+                onCreate={handleCreateDiploma}
             ></CreateModal>
         </Flex>
     );

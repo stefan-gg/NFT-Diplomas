@@ -13,4 +13,8 @@ export default class CollectionService {
         const data = await this.contract.getDiplomas();
         return data;
     }
+
+    async addDiploma(date, ipfsLink, universityName) {
+        return await this.contract.addDiploma(date, ipfsLink, universityName);
+    }
 }

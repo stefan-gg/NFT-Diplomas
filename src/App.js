@@ -4,19 +4,20 @@ import { useToast } from '@chakra-ui/react';
 
 import Header from './Header';
 import DiplomasDisplay from './DiplomasDisplay';
-import ContractService from "./collection/ContractService";
+import ContractService from './collection/ContractService';
+import { getFileCid, uploadJSON } from './service/IPFSService';
 
 function App() {
-
   const [provider, setProvider] = useState(null);
   const [contractService, setContractService] = useState(null);
   const [stateChanger, setStateChanger] = useState(null);
+  const [isMinting, setIsMinting] = useState(false);
   const [list, setList] = useState([]);
   const [user, setUser] = useState({
     signer: null,
     balance: 0,
     isAdmin: false,
-    isUR: false //is the user University Representative meaning he can add new diplomas
+    isUR: false, //is the user University Representative meaning he can add new diplomas
   });
   const [isConnecting, setIsConnecting] = useState(false);
 
@@ -66,17 +67,17 @@ function App() {
   const loadAccounts = async () => {
     const accounts = await provider.send('eth_accounts', []);
     updateAccounts(accounts);
-
   };
 
   const updateAccounts = async accounts => {
     if (provider) {
       if (accounts && accounts.length > 0) {
-        
         var isAdmin = false;
         var isUR = false;
 
-        const _contractService = new ContractService(await provider.getSigner());
+        const _contractService = new ContractService(
+          await provider.getSigner()
+        );
         _contractService.getDiplomas().then(_list => {
           setList(_list[2]);
           console.log(_list);
@@ -84,12 +85,12 @@ function App() {
           isUR = _list[1];
         });
         setContractService(_contractService);
-        
+
         setUser({
           signer: await provider.getSigner(),
           balance: await provider.getBalance(accounts[0]),
           isAdmin: isAdmin,
-          isUR: isUR
+          isUR: isUR,
         });
 
         // setStateChanger(new StateChanger(await provider.getSigner()));
@@ -100,7 +101,7 @@ function App() {
   };
 
   const handleConnectWallet = async () => {
-    // setIsMinting(true);
+    setIsMinting(true);
     setIsConnecting(true);
 
     try {
@@ -116,17 +117,70 @@ function App() {
     }
 
     setIsConnecting(false);
-    // setIsMinting(false);
+    setIsMinting(false);
   };
 
+  const handleCreateDiploma = async data => {
+    setIsMinting(true);
+
+    toast({
+      title: 'Diploma creation process has started!',
+      status: 'info',
+    });
+
+    const logoCID = await getFileCid(data.universityLogo);
+
+    data.universityLogo = logoCID;
+
+    const date = new Date();
+
+    const dateStr = date.toLocaleDateString();
+
+    // try {
+    //   await uploadJSON(Date.now().toString(), data, cid => {
+    //     if (contractService) {
+
+    //       contractService.addDiploma(dateStr, cid, data.universityName).then(tx => {
+    //         setIsMinting(false);
+
+    //         provider.once(tx.hash, () => {
+    //           toast({
+    //             title: 'Your Diploma NFT is created!',
+    //             status: 'success',
+    //             description:
+    //               'You can now refresh the market too see your new Diploma NFT',
+    //           });
+    //         });
+    //       });
+    //     }
+    //   });
+    // } catch (error) {
+    //   if (error.code === 4001) {
+    //     toast({
+    //       title: 'Wallet connection failed',
+    //       status: 'error',
+    //       description: 'Transaction rejected by user.',
+    //     });
+    //   } else {
+    //     toast({
+    //       title: 'Wallet connection failed',
+    //       status: 'error',
+    //       description: 'Transaction rejected !',
+    //     });
+    //   }
+    // } finally {
+    //   setIsMinting(false);
+    // }
+  };
 
   return (
     <>
       <Header
         user={user}
         isConnecting={isConnecting}
-        // isMinting={isMinting}
+        isMinting={isMinting}
         handleConnect={handleConnectWallet}
+        handleCreateDiploma={handleCreateDiploma}
       />
 
       {list.length > 0 && <DiplomasDisplay list={list} />}
@@ -137,7 +191,7 @@ function App() {
               paddingTop: '100px',
             }}
           ></div>
-          <p>AAAAA</p>
+          <p>Loading...</p>
         </>
       )}
     </>
