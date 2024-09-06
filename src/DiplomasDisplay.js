@@ -29,14 +29,14 @@ const DiplomasDisplay = ({
                 }}
             ></div>
             <SimpleGrid columns={3} spacing={10} mt={7} ml={5}>
-                {list.map(diplomeNTF => (
-                    <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
+                {list.map(diplomaNFT => (
+                    <Box key={diplomaNFT[0]} maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
                         {/* <Image src={property.imageUrl} alt={property.imageAlt} /> */}
 
                         <Box p='6'>
                             <Box display='flex' alignItems='baseline'>
                                 <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                    Diplome ID: {diplomeNTF[0].toString()}
+                                    Diplome ID: {diplomaNFT[0].toString()}
                                 </Badge>
                                 <Box
                                     color='gray.500'

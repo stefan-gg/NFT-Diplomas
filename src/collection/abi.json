@@ -1,10 +1,5 @@
 [
 	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -67,73 +62,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getDiplomas",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "bool",
-						"name": "isAdmin",
-						"type": "bool"
-					},
-					{
-						"internalType": "bool",
-						"name": "isUniversityRepresentative",
-						"type": "bool"
-					},
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "diplomeID",
-								"type": "uint256"
-							},
-							{
-								"internalType": "string",
-								"name": "diplomeDate",
-								"type": "string"
-							},
-							{
-								"internalType": "bool",
-								"name": "isVerified",
-								"type": "bool"
-							},
-							{
-								"internalType": "bool",
-								"name": "isSuspended",
-								"type": "bool"
-							},
-							{
-								"internalType": "string",
-								"name": "universityName",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "diplomeIPFSLink",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "comment",
-								"type": "string"
-							}
-						],
-						"internalType": "struct DiplomasContract.Diplome[]",
-						"name": "diplomas",
-						"type": "tuple[]"
-					}
-				],
-				"internalType": "struct DiplomasContract.ReturnData",
-				"name": "",
-				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -175,6 +103,86 @@
 		"name": "suspendDiplome",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "checkAddressRoles",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "bool",
+						"name": "isAdmin",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isUniversityRepresentative",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct DiplomasContract.ReturnData",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getDiplomas",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "diplomeID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "diplomeDate",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isVerified",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isSuspended",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "universityName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "diplomeIPFSLink",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "comment",
+						"type": "string"
+					}
+				],
+				"internalType": "struct DiplomasContract.Diplome[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

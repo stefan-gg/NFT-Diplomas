@@ -44,6 +44,7 @@ const Header = ({
     return (
         <Flex
             w={'100%'}
+            h={'8%'}
             paddingX={10}
             position={'fixed'}
             backgroundColor={'gray.600'}
@@ -51,7 +52,7 @@ const Header = ({
             alignItems={'center'}
         >
             <HStack spacing={6}>
-                {user.isUR && (
+                { user.isUR && (
                     <Button
                         // colorScheme='cyan'
                         size={{ base: 'md', md: 'lg', lg: 'lg' }}
@@ -67,7 +68,7 @@ const Header = ({
                     </Button>
                 )}
 
-                {user.isAdmin && (
+                { user.isAdmin && (
                     <>
                         <Button
                             colorScheme='teal' 

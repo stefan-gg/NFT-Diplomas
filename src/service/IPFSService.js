@@ -51,9 +51,12 @@ async function uploadImage(file) {
   });
 }
 
-export async function getFileCid(file) {
-  const cid = await uploadImage(file);
+export async function getFileCid(logo) {
+  const promises = logo.map(file => uploadImage(file));
+  const cid = await Promise.all(promises);
   return cid;
+  // const cid = await uploadImage(file);
+  // return cid;
 }
 
 export async function getMetadata(url) {

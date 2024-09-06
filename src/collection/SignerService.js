@@ -1,17 +1,16 @@
-import { Contract, parseEther } from "ethers";
+import { Contract } from "ethers";
 import abi from "./abi.json";
 
 export default class CollectionService {
     constructor(signer) {
         this.contract = new Contract(
-            "0xcCa6B9258b7A0e50dC64D4cdCd1F9Afc8eaC8bA4",
+            "0x88363a1bFe49F325567b4fC7c9998c0093EC72f9",
             abi, 
             signer);
     }
 
-    async getDiplomas() {
-        const data = await this.contract.getDiplomas();
-        return data;
+    async checkAddressRoles() {
+        return await this.contract.checkAddressRoles();
     }
 
     async addDiploma(date, ipfsLink, universityName) {

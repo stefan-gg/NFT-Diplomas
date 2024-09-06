@@ -1,16 +1,17 @@
-import { BrowserProvider, toBigInt } from 'ethers';
+import { BrowserProvider } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@chakra-ui/react';
 
 import Header from './Header';
 import DiplomasDisplay from './DiplomasDisplay';
-import ContractService from './collection/ContractService';
+import CollectionService from './collection/CollectionService';
+import SignerService from './collection/SignerService';
 import { getFileCid, uploadJSON } from './service/IPFSService';
 
 function App() {
   const [provider, setProvider] = useState(null);
-  const [contractService, setContractService] = useState(null);
-  const [stateChanger, setStateChanger] = useState(null);
+  const [collectionService, setCollectionService] = useState(null);
+  const [signerService, setSignerService] = useState(null);
   const [isMinting, setIsMinting] = useState(false);
   const [list, setList] = useState([]);
   const [user, setUser] = useState({
@@ -42,13 +43,12 @@ function App() {
     if (provider) {
       loadAccounts();
 
-      // const _contractService = new ContractService(provider.getSigner());
-      // _contractService.getDiplomas().then(_list => {
-      //   setList(_list);
-      //   console.log(_list);
-      //   console.log(user);
-      // });
-      // setContractService(_contractService);
+      const _collectionService = new CollectionService(provider);
+      _collectionService.getDiplomas().then(_list => {
+        setList(_list);
+        console.log(_list);
+      });
+      setCollectionService(_collectionService);
 
       window.ethereum.on('accountsChanged', accounts => {
         updateAccounts(accounts);
@@ -75,16 +75,17 @@ function App() {
         var isAdmin = false;
         var isUR = false;
 
-        const _contractService = new ContractService(
+        const _signerService = new SignerService(
           await provider.getSigner()
         );
-        _contractService.getDiplomas().then(_list => {
-          setList(_list[2]);
-          console.log(_list);
+
+        await _signerService.checkAddressRoles().then(_list => {
           isAdmin = _list[0];
           isUR = _list[1];
+          // console.log(_list);
         });
-        setContractService(_contractService);
+        
+        setSignerService(_signerService);
 
         setUser({
           signer: await provider.getSigner(),
@@ -93,7 +94,6 @@ function App() {
           isUR: isUR,
         });
 
-        // setStateChanger(new StateChanger(await provider.getSigner()));
       } else {
         setUser({ signer: null, balance: 0 });
       }
@@ -120,13 +120,17 @@ function App() {
     setIsMinting(false);
   };
 
-  const handleCreateDiploma = async data => {
+  const handleCreateDiploma = async (data) => {
     setIsMinting(true);
 
     toast({
       title: 'Diploma creation process has started!',
       status: 'info',
     });
+
+    // console.log(data);
+
+    // console.log(data.universityLogo);
 
     const logoCID = await getFileCid(data.universityLogo);
 
@@ -136,41 +140,41 @@ function App() {
 
     const dateStr = date.toLocaleDateString();
 
-    // try {
-    //   await uploadJSON(Date.now().toString(), data, cid => {
-    //     if (contractService) {
+    try {
+      await uploadJSON(Date.now().toString(), data, cid => {
+        if (signerService) {
 
-    //       contractService.addDiploma(dateStr, cid, data.universityName).then(tx => {
-    //         setIsMinting(false);
+          signerService.addDiploma(dateStr, cid, data.universityName).then(tx => {
+            setIsMinting(false);
 
-    //         provider.once(tx.hash, () => {
-    //           toast({
-    //             title: 'Your Diploma NFT is created!',
-    //             status: 'success',
-    //             description:
-    //               'You can now refresh the market too see your new Diploma NFT',
-    //           });
-    //         });
-    //       });
-    //     }
-    //   });
-    // } catch (error) {
-    //   if (error.code === 4001) {
-    //     toast({
-    //       title: 'Wallet connection failed',
-    //       status: 'error',
-    //       description: 'Transaction rejected by user.',
-    //     });
-    //   } else {
-    //     toast({
-    //       title: 'Wallet connection failed',
-    //       status: 'error',
-    //       description: 'Transaction rejected !',
-    //     });
-    //   }
-    // } finally {
-    //   setIsMinting(false);
-    // }
+            provider.once(tx.hash, () => {
+              toast({
+                title: 'Your Diploma NFT is created!',
+                status: 'success',
+                description:
+                  'You can now refresh the market too see your new Diploma NFT',
+              });
+            });
+          });
+        }
+      });
+    } catch (error) {
+      if (error.code === 4001) {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected by user.',
+        });
+      } else {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected !',
+        });
+      }
+    } finally {
+      setIsMinting(false);
+    }
   };
 
   return (

@@ -50,7 +50,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
     studentGrades: { 0: { subject: '', grade: '' } },
   });
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     onCreate(formData);
     setImage(null);
@@ -135,7 +135,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
               <Flex justify={'center'} mt={3} ml={5}>
                 <details>
                   <summary>University related information</summary>
-                  <FormControl isRequired>
+                  <FormControl isRequired >
                     <FormLabel fontSize="md">Country</FormLabel>
                     <Input
                       onChange={e => {
