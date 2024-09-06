@@ -44,8 +44,8 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
     universityName: '',
     studentId: '',
     studentMajor: '',
-    studyLevel: '',
-    studyDuration: 0,
+    studyLevel: "Associate's Studies",
+    studyDuration: 1,
     universityLogo: null,
     studentGrades: { 0: { subject: '', grade: '' } },
   });
@@ -193,6 +193,12 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                       variant="flushed"
                       size="sm"
                       width={0.8}
+                      onChange={e => {
+                        setFormData({
+                          ...formData,
+                          studentMajor: e.target.value,
+                        });
+                      }}
                     />
 
                     <FormLabel fontSize="md">Study level</FormLabel>
