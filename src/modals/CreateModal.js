@@ -14,22 +14,15 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Spacer,
-  Textarea,
-  Toast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { parseEther } from 'ethers';
 import {
-  ArrowDownIcon,
-  ArrowUpDownIcon,
   AttachmentIcon,
   CalendarIcon,
   CloseIcon,
   InfoIcon,
   TriangleDownIcon,
 } from '@chakra-ui/icons';
-import { Detective } from 'aws-sdk';
 
 const CreateModal = ({ isOpen, onCreate, onClose }) => {
   const [image, setImage] = useState(null);

@@ -25,7 +25,7 @@ const Header = ({
     const {
         isOpen: isCreateOpen,
         onOpen: onCreateOpen,
-        onClose: onCloseCreate,
+        onClose: onCreateClose,
     } = useDisclosure();
     const formatBalance = ethers.formatEther(user.balance).substring(0, 6);
     const address = user.signer?.address;
@@ -120,11 +120,11 @@ const Header = ({
                 </Button>
             </HStack>
             <Spacer />
-            <VStack>
+            <VStack mr={5}>
                 {user.signer && <Text>{formatAddress}</Text>}
                 {user.signer && <Text>{formatBalance}</Text>}
             </VStack>
-            <ColorModeSwitcher></ColorModeSwitcher>
+            {/* <ColorModeSwitcher></ColorModeSwitcher> */}
             <Button
                 ml={3}
                 isDisabled={isDisabled}
@@ -135,7 +135,7 @@ const Header = ({
             </Button>
             <CreateModal
                 isOpen={isCreateOpen}
-                onClose={onCloseCreate}
+                onClose={onCreateClose}
                 onCreate={handleCreateDiploma}
             ></CreateModal>
         </Flex>

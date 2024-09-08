@@ -1,13 +1,8 @@
 import {
     Button,
     HStack,
-    Select,
-    Spacer,
-    VStack,
     Text,
     useDisclosure,
-    Flex,
-    Input,
     SimpleGrid,
     Box,
     Badge,
@@ -30,9 +25,25 @@ import {
     QuestionIcon,
     Search2Icon,
 } from '@chakra-ui/icons';
-import { ethers } from 'ethers';
+
+import ViewDetailsModal from './modals/ViewDetailsModal';
+import { useState } from 'react';
 
 const DiplomasDisplay = ({ list }) => {
+
+    const {
+        isOpen,
+        onOpen,
+        onClose,
+    } = useDisclosure();
+
+    const [selectedDiploma, setSelectedDiploma] = useState(null);
+
+    const customOpen = (diploma) => {
+        setSelectedDiploma(diploma);
+        onOpen();
+    };
+
     return (
         <>
             <div
@@ -72,7 +83,7 @@ const DiplomasDisplay = ({ list }) => {
                         <Box p="6">
                             <Box display="flex" alignItems="baseline">
                                 <Badge borderRadius="full" px="2" colorScheme="teal">
-                                    Diplome ID: {diplomaNFT[0].toString()}
+                                    Diploma ID: {diplomaNFT[0].toString()}
                                 </Badge>
                                 <Box
                                     color="gray.500"
@@ -95,18 +106,21 @@ const DiplomasDisplay = ({ list }) => {
                                 isTruncated
                             >
                                 {!diplomaNFT[2] && !diplomaNFT[3] && (
-                                    <>
-                                        Pending <QuestionIcon color={'yellow'} ml={2} />
-                                    </>
+                                    <Text title='Validation is pending.'>
+                                        Pending <QuestionIcon color={'yellow'} ml={2} mb={1} />
+                                    </ Text>
                                 )}
                                 {diplomaNFT[2] && (
-                                    <>
-                                        Accepted <CheckCircleIcon color={'green'} ml={2} />
-                                    </>
+                                    <Text title='Diploma is accepted!'>
+                                        Accepted <CheckCircleIcon color={'green'} ml={2} mb={1} />
+                                    </ Text>
                                 )}
                                 {diplomaNFT[3] && (
                                     <HStack>
-                                        <>Suspended <CloseIcon color={'red'} ml={2} /></>
+                                        <Text title='Diploma is suspended. You can see the reason by clicking on the info icon!'>
+                                            Suspended <CloseIcon color={'red'} ml={1} mb={1} />
+                                        </Text>
+
                                         {diplomaNFT[6] && (
                                             <Box mb={2}>
                                                 <Popover>
@@ -140,13 +154,25 @@ const DiplomasDisplay = ({ list }) => {
 
                             <Box>GPA: 4.0</Box>
 
-                            <Button mt={2} colorScheme="blue">
+                            <Button onClick={(e) => customOpen(diplomaNFT)} mt={2} colorScheme="blue">
                                 More details
                             </Button>
                         </Box>
                     </Box>
                 ))}
             </SimpleGrid>
+
+            {selectedDiploma &&
+                <ViewDetailsModal
+                    isOpen={isOpen}
+                    onClose={() => {
+                        setSelectedDiploma(null);
+                        onClose();
+                    }}
+                    diplomaNFT={selectedDiploma}
+                >
+                </ViewDetailsModal>
+            }
         </>
     );
 };

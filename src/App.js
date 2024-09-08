@@ -1,6 +1,6 @@
 import { BrowserProvider } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
-import { useToast } from '@chakra-ui/react';
+import { Box, HStack, Spinner, useToast } from '@chakra-ui/react';
 
 import Header from './Header';
 import DiplomasDisplay from './DiplomasDisplay';
@@ -189,14 +189,16 @@ function App() {
 
       {list.length > 0 && <DiplomasDisplay list={list} />}
       {list.length == 0 && (
-        <>
-          <div
-            style={{
-              paddingTop: '100px',
-            }}
-          ></div>
-          <p>Loading...</p>
-        </>
+        <HStack
+          style={{
+            paddingTop: '100px',
+          }}
+        >
+          <p>
+            Loading
+          </p>
+          <Spinner />
+        </HStack>
       )}
     </>
   );
