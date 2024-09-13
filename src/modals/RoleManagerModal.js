@@ -23,11 +23,8 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 const ViewDetailsModal = ({
     isOpen,
     onClose,
-    diplomaNFT,
-    isAcceptModal,
-    isRejectModal,
-    handleRejectDiploma,
-    handleAcceptDiploma,
+    managingUsers,
+    managingUR, // add/remove university representative modal
 }) => {
     const [check, setCheck] = useState(false);
     const [comment, setComment] = useState('');

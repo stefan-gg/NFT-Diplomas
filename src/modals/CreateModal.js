@@ -14,6 +14,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Text
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import {
@@ -21,6 +22,7 @@ import {
   CalendarIcon,
   CloseIcon,
   InfoIcon,
+  QuestionIcon,
   TriangleDownIcon,
 } from '@chakra-ui/icons';
 
@@ -37,6 +39,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
     universityName: '',
     studentId: '',
     studentMajor: '',
+    studentGPA: '',
     studyLevel: "Associate's Studies",
     studyDuration: 1,
     universityLogo: null,
@@ -122,8 +125,6 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                   });
                 }}
               />
-
-              {/* <FormLabel>University information</FormLabel> */}
 
               <Flex justify={'center'} mt={3} ml={5}>
                 <details>
@@ -269,6 +270,25 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                   </FormControl>
                 </details>
               </Flex>
+
+
+              <HStack
+                title="This site does not calculate student's GPA, you must insert GPA from student's diploma."
+                mt={5}      
+              >
+                <FormLabel>Student GPA:</FormLabel>
+                <Input
+                  placeholder='4.0'
+                  w={'30%'}
+                  onChange={e => {
+                    setFormData({
+                      ...formData,
+                      studentGPA: e.target.value,
+                    });
+                  }}
+                />
+                <QuestionIcon />
+              </HStack>
 
               <FormLabel
                 title="Type Subject name and Code in the template from placeholder"

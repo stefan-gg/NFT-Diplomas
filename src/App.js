@@ -1,6 +1,6 @@
 import { BrowserProvider } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
-import { Box, HStack, Spinner, useToast } from '@chakra-ui/react';
+import { HStack, Spinner, useToast } from '@chakra-ui/react';
 
 import Header from './Header';
 import DiplomasDisplay from './DiplomasDisplay';
@@ -84,7 +84,7 @@ function App() {
           isUR = _list[1];
           // console.log(_list);
         });
-        
+
         setSignerService(_signerService);
 
         setUser({
@@ -177,6 +177,78 @@ function App() {
     }
   };
 
+  const handleRejectDiploma = async (diplomaID, comment) => {
+    toast({
+      title: 'The diploma rejection or suspension process has begun.',
+      status: 'info',
+    });
+
+    try {
+      if (signerService) {
+
+        await signerService.suspendDiploma(diplomaID, comment).then(tx => {
+          provider.once(tx.hash, () => {
+            toast({
+              title: 'Diploma with ID: ' + diplomaID.toString() + ' is rejected/suspended.',
+              status: 'error',
+            });
+          });
+        });
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected by user.',
+        });
+      } else {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected !',
+        });
+      }
+    }
+  };
+
+  const handleAcceptDiploma = async (diplomaID, comment) => {
+    toast({
+      title: 'The diploma acceptance process has begun.',
+      status: 'info',
+    });
+
+    try {
+      if (signerService) {
+
+        await signerService.acceptDiploma(diplomaID).then(tx => {
+          provider.once(tx.hash, () => {
+            toast({
+              title: 'Diploma with ID: ' + diplomaID.toString() + ' is accepted.',
+              status: 'success',
+            });
+          });
+        });
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected by user.',
+        });
+      } else {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected !',
+        });
+      }
+    }finally {
+      console.log("placem");
+    }
+  };
+
   return (
     <>
       <Header
@@ -187,7 +259,13 @@ function App() {
         handleCreateDiploma={handleCreateDiploma}
       />
 
-      {list.length > 0 && <DiplomasDisplay list={list} />}
+      {list.length > 0 && 
+      <DiplomasDisplay
+        list={list}
+        user={user}
+        handleRejectDiploma={handleRejectDiploma}
+        handleAcceptDiploma={handleAcceptDiploma}
+      />}
       {list.length == 0 && (
         <HStack
           style={{

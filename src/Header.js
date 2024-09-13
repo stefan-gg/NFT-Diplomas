@@ -11,7 +11,6 @@ import {
 } from '@chakra-ui/react';
 import { Search2Icon } from '@chakra-ui/icons'
 import { ethers } from 'ethers';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
 
 import CreateModal from './modals/CreateModal';
 
@@ -51,7 +50,7 @@ const Header = ({
             zIndex={100}
             alignItems={'center'}
         >
-            <HStack spacing={6}>
+            <HStack >
                 { user.isUR && (
                     <Button
                         // colorScheme='cyan'
@@ -64,40 +63,40 @@ const Header = ({
                         isLoading={isMinting}
                         loadingText={'Minting...'}
                     >
-                        Add new dipome
+                        Add new diplome
                     </Button>
                 )}
 
                 { user.isAdmin && (
-                    <>
+                    <HStack mr={15} ml={-5} >
                         <Button
                             colorScheme='teal' 
                             variant='outline'
                             size={{ base: 'md', md: 'md', lg: 'md' }}
-                            w={130}
+                            // w={145}
                             alignItems={'center'}
                             // onClick={handleCreate}
                             isDisabled={isMinting}
                             isLoading={isMinting}
                             loadingText={'Minting...'}
                         >
-                            Add new admin
+                            Add/Remove admin
                         </Button>
 
                         <Button
                             colorScheme='blue' 
                             variant='outline'
                             size={{ base: 'md', md: 'md', lg: 'md' }}
-                            w={130}
+                            // w={130}
                             alignItems={'center'}
                             // onClick={handleCreate}
                             isDisabled={isMinting}
                             isLoading={isMinting}
                             loadingText={'Minting...'}
                         >
-                            Add new UR
+                            Add/Remove UR
                         </Button>
-                    </>
+                    </HStack>
                 )}
 
                 <Select w={170}>
@@ -111,11 +110,13 @@ const Header = ({
             </HStack>
             <HStack>
                 <Input
-                    ml={60}
+                    borderRadius={"20px 0 0 20px"}
+                    ml={user.isAdmin ? 43 : user.isUR ? 160 : 385}
+                    mr={-2}
                     type="text"
-                    placeholder="Search for diplome ID"
+                    placeholder="Search diploma by ID"
                 ></Input>
-                <Button>
+                <Button borderRadius={"0 20px 20px 0"}>
                     <Search2Icon mr={1} />
                 </Button>
             </HStack>
