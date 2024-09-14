@@ -14,11 +14,12 @@ function App() {
   const [signerService, setSignerService] = useState(null);
   const [isMinting, setIsMinting] = useState(false);
   const [list, setList] = useState([]);
+  const [singleDiploma, setSignleDiploma] = useState(null);
   const [user, setUser] = useState({
     signer: null,
     balance: 0,
     isAdmin: false,
-    isUR: false, //is the user University Representative meaning he can add new diplomas
+    isUR: false, //is the user University Representative -> meaning he can add new diplomas
   });
   const [isConnecting, setIsConnecting] = useState(false);
 

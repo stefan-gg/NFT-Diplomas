@@ -15,11 +15,9 @@ export default class CollectionService {
         // return data;
         const data = await this.contract.getDiplomas();
 
-        console.log(data);
-        
-        const diplomes = await Promise.all(
+        const diplomas = await Promise.all(
             data.map(async (diploma) => {
-                const metadata = await getMetadata(diploma.diplomeIPFSLink);
+                const metadata = await getMetadata(diploma.diplomaIPFSLink);
                 
                 return {
                     ...diploma,
@@ -27,7 +25,29 @@ export default class CollectionService {
                 };
             })
         );
-        return diplomes;
+        return diplomas;
+    }
+
+    async getDiplomaByID(diplomaID) {
+        const data = await this.contract.getDiplomaByID(diplomaID);
+
+        const diplomas = await Promise.all(
+            data.map(async (diploma) => {
+
+                if (diploma.univeristyName != '') {
+                    const metadata = await getMetadata(diploma.diplomaIPFSLink);
+                    
+                    return {
+                        ...diploma,
+                        ...metadata,
+                    };
+                } else {
+                    diploma
+                }
+
+            })
+        );
+        return diplomas;
     }
 
 }

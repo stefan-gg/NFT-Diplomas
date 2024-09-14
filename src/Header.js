@@ -41,6 +41,7 @@ const Header = ({
 
     const [managingAdmin, setManagingAdmin] = useState(false);
     const [managingUR, setManagingUR] = useState(false);
+    const [searchValue, setSearchValue] = useState(null);
 
     const formatBalance = ethers.formatEther(user.balance).substring(0, 6);
     const address = user.signer?.address;
@@ -79,7 +80,7 @@ const Header = ({
                         isLoading={isMinting}
                         loadingText={'Minting...'}
                     >
-                        Add new diplome
+                        Add new diploma
                     </Button>
                 )}
 
@@ -137,8 +138,11 @@ const Header = ({
                     mr={-2}
                     type="text"
                     placeholder="Search diploma by ID"
-                ></Input>
-                <Button borderRadius={"0 20px 20px 0"}>
+                    onChange={(e) => setSearchValue(e.target.value)}
+                />
+                <Button 
+                    borderRadius={"0 20px 20px 0"}
+                >
                     <Search2Icon mr={1} />
                 </Button>
             </HStack>

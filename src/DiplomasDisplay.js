@@ -30,10 +30,10 @@ import {
 import ViewDetailsModal from './modals/ViewDetailsModal';
 import { useState } from 'react';
 
-const DiplomasDisplay = ({ 
-    list, 
-    user, 
-    handleRejectDiploma, 
+const DiplomasDisplay = ({
+    list,
+    user,
+    handleRejectDiploma,
     handleAcceptDiploma,
 }) => {
 
@@ -138,55 +138,24 @@ const DiplomasDisplay = ({
                                     </ Text>
                                 )}
                                 {diplomaNFT[3] && (
-                                    <HStack
-                                    _hover={{
-                                        // overflow: 'visible'
-                                    }}
-
-                                    >
+                                    <HStack>
                                         <Text title='Diploma is suspended. You can see the reason by clicking on the info icon!'>
                                             Suspended <CloseIcon color={'red'} ml={1} mb={1} />
                                         </Text>
 
                                         {diplomaNFT[6] && (
-                                            // <Popover>
-                                            //     <PopoverTrigger>
-                                            //         <Button
-                                            //             _hover={{
-                                            //                 transform: 'scale(1.05)',
-                                            //                 boxShadow: 'md',
-                                            //             }}
-                                            //             title='Press button to see the comment'
-                                            //             size={'sm'}>
-                                            //             <InfoIcon />
-                                            //         </Button>
-                                            //     </PopoverTrigger>
-                                            //     <PopoverContent ml={20} >
-                                            //         <PopoverArrow />
-                                            //         <PopoverCloseButton />
-                                            //         <PopoverHeader>Diploma is invalid!</PopoverHeader>
-                                            //         <PopoverBody>
-                                                        
-                                                        <Tooltip 
-                                                            placement='top' 
-                                                            label={diplomaNFT[6]}
-                                                            closeOnClick={false}
-                                                            hasArrow 
-                                                            arrowSize={15}
-                                                            // bg={'#A0AEC0'}
-                                                        >
-                                                            {/* <Textarea
-                                                                resize='none'
-                                                                readOnly
-                                                                value={diplomaNFT[6]}
-                                                            /> */}
-                                                            <Button size={'sm'}>
-                                                                <InfoIcon boxSize={'17px'} />
-                                                            </Button>
-                                                        </Tooltip>
-                                            //         </PopoverBody>
-                                            //     </PopoverContent>
-                                            // </Popover>
+                                            <Tooltip
+                                                placement='top'
+                                                label={diplomaNFT[6]}
+                                                closeOnClick={false}
+                                                hasArrow
+                                                arrowSize={15}
+                                            // bg={'#A0AEC0'}
+                                            >
+                                                <Button size={'sm'}>
+                                                    <InfoIcon boxSize={'17px'} />
+                                                </Button>
+                                            </Tooltip>
                                         )}
                                     </HStack>
                                 )}

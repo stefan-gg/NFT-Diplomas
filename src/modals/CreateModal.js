@@ -74,7 +74,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader title="Fill the form with the student data">
-          New diplome form <InfoIcon mr={1} />
+          New diploma form <InfoIcon mr={1} />
         </ModalHeader>
 
         <ModalCloseButton />
@@ -355,7 +355,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button type="submit">Create Diplome as an NFT</Button>
+            <Button type="submit">Create Diploma as an NFT</Button>
           </ModalFooter>
         </form>
       </ModalContent>

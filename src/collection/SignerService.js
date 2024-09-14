@@ -18,11 +18,11 @@ export default class CollectionService {
     }
 
     async acceptDiploma(diplomaID) {
-        return await this.contract.acceptDiplome(diplomaID);
+        return await this.contract.acceptDiploma(diplomaID);
     }
 
     async suspendDiploma(diplomaID, comment) {
-        return await this.contract.suspendDiplome(diplomaID, comment);
+        return await this.contract.suspendDiploma(diplomaID, comment);
     }
 
     async addAdmin(address) {
