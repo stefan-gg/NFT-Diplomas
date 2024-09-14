@@ -30,7 +30,12 @@ import {
 import ViewDetailsModal from './modals/ViewDetailsModal';
 import { useState } from 'react';
 
-const DiplomasDisplay = ({ list, user, handleRejectDiploma, handleAcceptDiploma }) => {
+const DiplomasDisplay = ({ 
+    list, 
+    user, 
+    handleRejectDiploma, 
+    handleAcceptDiploma,
+}) => {
 
     const {
         isOpen,

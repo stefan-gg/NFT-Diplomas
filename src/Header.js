@@ -13,19 +13,35 @@ import { Search2Icon } from '@chakra-ui/icons'
 import { ethers } from 'ethers';
 
 import CreateModal from './modals/CreateModal';
+import RoleManagementModal from './modals/RoleManagementModal';
+import { useState } from 'react';
 
 const Header = ({
     user,
     isConnecting,
     isMinting,
     handleConnect,
-    handleCreateDiploma
+    handleCreateDiploma,
+    handleAddAdmin,
+    handleRemoveAdmin,
+    handleAddUR,
+    handleRemoveUR
 }) => {
     const {
         isOpen: isCreateOpen,
         onOpen: onCreateOpen,
         onClose: onCreateClose,
     } = useDisclosure();
+
+    const {
+        isOpen: isRoleModalOpen,
+        onOpen: onRoleModalOpen,
+        onClose: onRoleModalClose,
+    } = useDisclosure();
+
+    const [managingAdmin, setManagingAdmin] = useState(false);
+    const [managingUR, setManagingUR] = useState(false);
+
     const formatBalance = ethers.formatEther(user.balance).substring(0, 6);
     const address = user.signer?.address;
     const formatAddress =
@@ -51,7 +67,7 @@ const Header = ({
             alignItems={'center'}
         >
             <HStack >
-                { user.isUR && (
+                {user.isUR && (
                     <Button
                         // colorScheme='cyan'
                         size={{ base: 'md', md: 'lg', lg: 'lg' }}
@@ -67,15 +83,18 @@ const Header = ({
                     </Button>
                 )}
 
-                { user.isAdmin && (
+                {user.isAdmin && (
                     <HStack mr={15} ml={-5} >
                         <Button
-                            colorScheme='teal' 
+                            colorScheme='teal'
                             variant='outline'
                             size={{ base: 'md', md: 'md', lg: 'md' }}
                             // w={145}
                             alignItems={'center'}
-                            // onClick={handleCreate}
+                            onClick={() => {
+                                setManagingAdmin(true);
+                                onRoleModalOpen();
+                            }}
                             isDisabled={isMinting}
                             isLoading={isMinting}
                             loadingText={'Minting...'}
@@ -84,12 +103,15 @@ const Header = ({
                         </Button>
 
                         <Button
-                            colorScheme='blue' 
+                            colorScheme='blue'
                             variant='outline'
                             size={{ base: 'md', md: 'md', lg: 'md' }}
                             // w={130}
                             alignItems={'center'}
-                            // onClick={handleCreate}
+                            onClick={() => {
+                                setManagingUR(true);
+                                onRoleModalOpen();
+                            }}
                             isDisabled={isMinting}
                             isLoading={isMinting}
                             loadingText={'Minting...'}
@@ -138,7 +160,27 @@ const Header = ({
                 isOpen={isCreateOpen}
                 onClose={onCreateClose}
                 onCreate={handleCreateDiploma}
-            ></CreateModal>
+            >
+            </CreateModal>
+
+            <RoleManagementModal
+                isOpen={isRoleModalOpen}
+                onClose={
+                    () => {
+                        setManagingUR(false);
+                        setManagingAdmin(false);
+                        onRoleModalClose();
+                    }
+                }
+                managingAdmin={managingAdmin}
+                managingUR={managingUR}
+                handleCreateDiploma={handleCreateDiploma}
+                handleAddAdmin={handleAddAdmin}
+                handleRemoveAdmin={handleRemoveAdmin}
+                handleAddUR={handleAddUR}
+                handleRemoveUR={handleRemoveUR}
+            >
+            </RoleManagementModal>
         </Flex>
     );
 };

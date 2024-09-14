@@ -38,7 +38,7 @@ const ViewDetailsModal = ({
             <ModalContent>
                 <ModalHeader
                     textDecoration={diplomaNFT[3] ? 'line-through' : 'none'}
-                    title="Fill the form with the student data"
+                    title="Student data"
                 >
                     Student ID#{diplomaNFT.studentId}
                 </ModalHeader>

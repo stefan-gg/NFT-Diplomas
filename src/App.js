@@ -212,7 +212,7 @@ function App() {
     }
   };
 
-  const handleAcceptDiploma = async (diplomaID, comment) => {
+  const handleAcceptDiploma = async (diplomaID) => {
     toast({
       title: 'The diploma acceptance process has begun.',
       status: 'info',
@@ -244,8 +244,146 @@ function App() {
           description: 'Transaction rejected !',
         });
       }
-    }finally {
-      console.log("placem");
+    }
+  };
+
+  const handleAddAdmin = async (address) => {
+    toast({
+      title: 'New admin is being added.',
+      status: 'info',
+    });
+
+    try {
+      if (signerService) {
+
+        await signerService.addAdmin(address).then(tx => {
+          provider.once(tx.hash, () => {
+            toast({
+              title: 'New admin is added.',
+              status: 'success',
+            });
+          });
+        });
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected by user.',
+        });
+      } else {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected !',
+        });
+      }
+    }
+  };
+
+  const handleRemoveAdmin = async (address) => {
+    toast({
+      title: 'Admin is being removed.',
+      status: 'error',
+    });
+
+    try {
+      if (signerService) {
+
+        await signerService.removeAdmin(address).then(tx => {
+          provider.once(tx.hash, () => {
+            toast({
+              title: 'Admin is removed.',
+              status: 'success',
+            });
+          });
+        });
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected by user.',
+        });
+      } else {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected !',
+        });
+      }
+    }
+  };
+
+  const handleAddUR = async (address) => {
+    toast({
+      title: 'New university representative is being added.',
+      status: 'info',
+    });
+
+    try {
+      if (signerService) {
+
+        await signerService.addUniversityRepresentative(address).then(tx => {
+          provider.once(tx.hash, () => {
+            toast({
+              title: 'New university representative is added.',
+              status: 'success',
+            });
+          });
+        });
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected by user.',
+        });
+      } else {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected !',
+        });
+      }
+    }
+  };
+
+  const handleRemoveUR = async (address) => {
+    toast({
+      title: 'University representative is being removed.',
+      status: 'info',
+    });
+
+    try {
+      if (signerService) {
+
+        await signerService.removeUniversityRepresentative(address).then(tx => {
+          provider.once(tx.hash, () => {
+            toast({
+              title: 'University representative is removed.',
+              status: 'success',
+            });
+          });
+        });
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected by user.',
+        });
+      } else {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected !',
+        });
+      }
     }
   };
 
@@ -257,6 +395,10 @@ function App() {
         isMinting={isMinting}
         handleConnect={handleConnectWallet}
         handleCreateDiploma={handleCreateDiploma}
+        handleAddAdmin={handleAddAdmin}
+        handleRemoveAdmin={handleRemoveAdmin}
+        handleAddUR={handleAddUR}
+        handleRemoveUR={handleRemoveUR}
       />
 
       {list.length > 0 && 
@@ -264,7 +406,7 @@ function App() {
         list={list}
         user={user}
         handleRejectDiploma={handleRejectDiploma}
-        handleAcceptDiploma={handleAcceptDiploma}
+        handleAcceptDiploma={handleAcceptDiploma} 
       />}
       {list.length == 0 && (
         <HStack
