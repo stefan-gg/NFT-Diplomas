@@ -25,7 +25,9 @@ const Header = ({
     handleAddAdmin,
     handleRemoveAdmin,
     handleAddUR,
-    handleRemoveUR
+    handleRemoveUR,
+    getDiplomaByID,
+    universities
 }) => {
     const {
         isOpen: isCreateOpen,
@@ -122,13 +124,15 @@ const Header = ({
                     </HStack>
                 )}
 
-                <Select w={170}>
-                    {/* {viewOptions.map((option) => (
+                <Select 
+                    w={170} 
+                >
+                        <option>Select University</option>
+                    {universities && universities.map((option) => (
                         <option key={option} value={option}>
                             {option}
                         </option>
-                    ))} */}
-                    <option>Select University</option>
+                    ))}
                 </Select>
             </HStack>
             <HStack>
@@ -136,12 +140,15 @@ const Header = ({
                     borderRadius={"20px 0 0 20px"}
                     ml={user.isAdmin ? 43 : user.isUR ? 160 : 385}
                     mr={-2}
-                    type="text"
+                    type="number"
                     placeholder="Search diploma by ID"
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => {
+                        setSearchValue(e.target.value);
+                    }}
                 />
                 <Button 
                     borderRadius={"0 20px 20px 0"}
+                    onClick={() => {getDiplomaByID(Number(searchValue))}}
                 >
                     <Search2Icon mr={1} />
                 </Button>

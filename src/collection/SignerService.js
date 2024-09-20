@@ -4,7 +4,7 @@ import abi from "./abi.json";
 export default class CollectionService {
     constructor(signer) {
         this.contract = new Contract(
-            "0x88363a1bFe49F325567b4fC7c9998c0093EC72f9",
+            "0x99FDAB56758D370887F91F1116981602b59cBBE6",
             abi,
             signer);
     }

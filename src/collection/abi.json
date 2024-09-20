@@ -7,7 +7,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "acceptDiplome",
+		"name": "acceptDiploma",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -34,7 +34,7 @@
 			},
 			{
 				"internalType": "string",
-				"name": "diplomeIPFSLink",
+				"name": "diplomaIPFSLink",
 				"type": "string"
 			},
 			{
@@ -100,7 +100,7 @@
 				"type": "string"
 			}
 		],
-		"name": "suspendDiplome",
+		"name": "suspendDiploma",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -125,6 +125,11 @@
 						"internalType": "bool",
 						"name": "isUniversityRepresentative",
 						"type": "bool"
+					},
+					{
+						"internalType": "string[]",
+						"name": "universityNames",
+						"type": "string[]"
 					}
 				],
 				"internalType": "struct DiplomasContract.ReturnData",
@@ -136,19 +141,25 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getDiplomas",
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "diplomaID",
+				"type": "uint256"
+			}
+		],
+		"name": "getDiplomaByID",
 		"outputs": [
 			{
 				"components": [
 					{
 						"internalType": "uint256",
-						"name": "diplomeID",
+						"name": "diplomaID",
 						"type": "uint256"
 					},
 					{
 						"internalType": "string",
-						"name": "diplomeDate",
+						"name": "diplomaDate",
 						"type": "string"
 					},
 					{
@@ -168,7 +179,7 @@
 					},
 					{
 						"internalType": "string",
-						"name": "diplomeIPFSLink",
+						"name": "diplomaIPFSLink",
 						"type": "string"
 					},
 					{
@@ -177,7 +188,118 @@
 						"type": "string"
 					}
 				],
-				"internalType": "struct DiplomasContract.Diplome[]",
+				"internalType": "struct DiplomasContract.Diploma",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getDiplomas",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "diplomaID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "diplomaDate",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isVerified",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isSuspended",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "universityName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "diplomaIPFSLink",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "comment",
+						"type": "string"
+					}
+				],
+				"internalType": "struct DiplomasContract.Diploma[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "pageNumber",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "universityName",
+				"type": "string"
+			}
+		],
+		"name": "getDiplomasWithPagination",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "diplomaID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "diplomaDate",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isVerified",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isSuspended",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "universityName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "diplomaIPFSLink",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "comment",
+						"type": "string"
+					}
+				],
+				"internalType": "struct DiplomasContract.Diploma[]",
 				"name": "",
 				"type": "tuple[]"
 			}

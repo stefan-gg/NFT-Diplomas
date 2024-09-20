@@ -1,6 +1,6 @@
 import { BrowserProvider } from 'ethers';
 import { useState, useEffect, useCallback } from 'react';
-import { HStack, Spinner, useToast } from '@chakra-ui/react';
+import { HStack, Spinner, useToast, Text } from '@chakra-ui/react';
 
 import Header from './Header';
 import DiplomasDisplay from './DiplomasDisplay';
@@ -15,6 +15,10 @@ function App() {
   const [isMinting, setIsMinting] = useState(false);
   const [list, setList] = useState([]);
   const [singleDiploma, setSignleDiploma] = useState(null);
+  const [count, setCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [universityName, setUniversityName] = useState("");
+  const [universities, setUniversities] = useState([]);
   const [user, setUser] = useState({
     signer: null,
     balance: 0,
@@ -45,9 +49,8 @@ function App() {
       loadAccounts();
 
       const _collectionService = new CollectionService(provider);
-      _collectionService.getDiplomas().then(_list => {
+      _collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
         setList(_list);
-        console.log(_list);
       });
       setCollectionService(_collectionService);
 
@@ -83,7 +86,9 @@ function App() {
         await _signerService.checkAddressRoles().then(_list => {
           isAdmin = _list[0];
           isUR = _list[1];
-          // console.log(_list);
+          setUniversities(_list[2]);
+          setCount(10);
+          // setCount(Math.floor(_list[2] / 6));
         });
 
         setSignerService(_signerService);
@@ -388,6 +393,59 @@ function App() {
     }
   };
 
+  const getDiplomaByID = async (diplomaID) => {
+    toast({
+      title: 'Searching for diploma with ID:' + diplomaID,
+      status: 'loading',
+      duration: 2000,
+    });
+
+    try {
+      if (collectionService) {
+
+        await collectionService.getDiplomaByID(diplomaID).then(_diploma => {
+
+            if(_diploma[0].universityName === ''){
+
+              toast.closeAll();
+
+              toast({
+                title: 'Diploma with ID:' + diplomaID + " does not exist.",
+                status: 'error',
+              });
+            } else {
+              toast({
+                title: 'Diploma with ID:' + diplomaID + " is found.",
+                status: 'success',
+              });
+
+              setSignleDiploma(_diploma);
+
+            }
+
+        });
+      }
+    } catch (error) {
+      if (error.code === 4001) {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected by user.',
+        });
+      } else {
+        toast({
+          title: 'Wallet connection failed',
+          status: 'error',
+          description: 'Transaction rejected !',
+        });
+      }
+    }
+  };
+
+  const showAllDiplomasAgain = async () => {
+    setSignleDiploma(null);
+  }
+
   return (
     <>
       <Header
@@ -400,24 +458,30 @@ function App() {
         handleRemoveAdmin={handleRemoveAdmin}
         handleAddUR={handleAddUR}
         handleRemoveUR={handleRemoveUR}
+        getDiplomaByID={getDiplomaByID}
+        universities={universities}
       />
 
       {list.length > 0 && 
       <DiplomasDisplay
         list={list}
+        singleDiploma={singleDiploma}
         user={user}
         handleRejectDiploma={handleRejectDiploma}
         handleAcceptDiploma={handleAcceptDiploma} 
+        count={count}
+        showAllDiplomasAgain={showAllDiplomasAgain}
       />}
+      
       {list.length == 0 && (
         <HStack
           style={{
             paddingTop: '100px',
           }}
         >
-          <p>
+          <Text fontSize={'20px'} ml={7}>
             Loading
-          </p>
+          </Text>
           <Spinner />
         </HStack>
       )}

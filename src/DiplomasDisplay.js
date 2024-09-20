@@ -8,15 +8,7 @@ import {
     Badge,
     Image,
     Center,
-    Popover,
-    PopoverTrigger,
-    PopoverArrow,
-    PopoverCloseButton,
-    PopoverHeader,
-    PopoverBody,
-    PopoverContent,
     useToast,
-    Textarea,
     Tooltip,
 } from '@chakra-ui/react';
 import {
@@ -28,57 +20,74 @@ import {
 } from '@chakra-ui/icons';
 
 import ViewDetailsModal from './modals/ViewDetailsModal';
+import PageChoices from './PageChoices';
 import { useState } from 'react';
 
 const DiplomasDisplay = ({
     list,
+    singleDiploma,
     user,
     handleRejectDiploma,
     handleAcceptDiploma,
+    count,
+    showAllDiplomasAgain,
 }) => {
-
-    const {
-        isOpen,
-        onOpen,
-        onClose,
-    } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [selectedDiploma, setSelectedDiploma] = useState(null);
     const [isAcceptModal, setIsAcceptModal] = useState(null);
     const [isRejectModal, setIsRejectModal] = useState(null);
+    const [isDisplaySingle, setIsDisplaySingle] = useState(!!singleDiploma);
+
+    const _list = list;
 
     const toast = useToast();
 
-    const customOpen = (diploma) => {
+    const customOpen = diploma => {
         setSelectedDiploma(diploma);
         onOpen();
     };
 
-    const openAcceptModal = (diploma) => {
+    const openAcceptModal = diploma => {
         setSelectedDiploma(diploma);
         setIsAcceptModal(true);
         onOpen();
-    }
+    };
 
-    const openRejectModal = (diploma) => {
+    const openRejectModal = diploma => {
         setSelectedDiploma(diploma);
         setIsRejectModal(true);
         onOpen();
+    };
+
+    if (singleDiploma) {
+        list = singleDiploma;
     }
 
     return (
         <>
             <div
                 style={{
-                    paddingTop: '50px',
+                    paddingTop: '100px',
                 }}
             ></div>
-            <SimpleGrid columns={3} spacing={5} mt={7} ml={5} mb={5}>
+            <PageChoices
+                count={10}
+            //count={count}
+            />
+            {singleDiploma && (
+                <Center>
+                    <Button colorScheme="red" onClick={() => showAllDiplomasAgain()}>
+                        Go back to all diplomas
+                    </Button>
+                </Center>
+            )}
+            <SimpleGrid columns={singleDiploma ? 1 : 3} spacing={5} mt={7} ml={5} mb={5}>
                 {list.map(diplomaNFT => (
                     <Box
                         key={diplomaNFT[0]}
                         maxW="sm"
-                        // position="relative"
+                        ml={singleDiploma ? '36%' : 0}
                         borderColor={
                             diplomaNFT[2] ? 'green' : diplomaNFT[3] ? 'red' : 'yellow'
                         }
@@ -88,7 +97,6 @@ const DiplomasDisplay = ({
                         transition="all 0.2s ease-in-out"
                         _hover={{
                             transform: 'scale(1.03)',
-                            // overflow: 'visible',
                             boxShadow: 'md',
                         }}
                     >
@@ -128,24 +136,24 @@ const DiplomasDisplay = ({
                                 isTruncated
                             >
                                 {!diplomaNFT[2] && !diplomaNFT[3] && (
-                                    <Text title='Validation is pending.'>
+                                    <Text title="Validation is pending.">
                                         Pending <QuestionIcon color={'yellow'} ml={2} mb={1} />
-                                    </ Text>
+                                    </Text>
                                 )}
                                 {diplomaNFT[2] && (
-                                    <Text title='Diploma is accepted!'>
+                                    <Text title="Diploma is accepted!">
                                         Accepted <CheckCircleIcon color={'green'} ml={2} mb={1} />
-                                    </ Text>
+                                    </Text>
                                 )}
                                 {diplomaNFT[3] && (
                                     <HStack>
-                                        <Text title='Diploma is suspended. You can see the reason by clicking on the info icon!'>
+                                        <Text title="Diploma is suspended. You can see the reason by clicking on the info icon!">
                                             Suspended <CloseIcon color={'red'} ml={1} mb={1} />
                                         </Text>
 
                                         {diplomaNFT[6] && (
                                             <Tooltip
-                                                placement='top'
+                                                placement="top"
                                                 label={diplomaNFT[6]}
                                                 closeOnClick={false}
                                                 hasArrow
@@ -164,11 +172,11 @@ const DiplomasDisplay = ({
                             <Box>
                                 {diplomaNFT.universityName + ' '}
                                 <Box as="span" color="gray.600" fontSize="sm">
-                                    / Software engineering {/* / {diplomaNFT.studentMajor} */}
+                                    / {diplomaNFT.studentMajor}
                                 </Box>
                             </Box>
 
-                            <Box>GPA: 4.0</Box>
+                            <Box>GPA: {diplomaNFT.studentGPA}</Box>
 
                             <HStack>
                                 <Button
@@ -183,7 +191,7 @@ const DiplomasDisplay = ({
                                     More details
                                 </Button>
 
-                                {user.isAdmin && diplomaNFT[2] &&
+                                {user.isAdmin && diplomaNFT[2] && (
                                     <Button
                                         _hover={{
                                             transform: 'scale(1.05)',
@@ -192,77 +200,79 @@ const DiplomasDisplay = ({
                                         onClick={() => {
                                             openRejectModal(diplomaNFT);
                                             toast({
-                                                description: "Please scroll to the end of the diploma in order to suspend it.",
+                                                description:
+                                                    'Please scroll to the end of the diploma in order to suspend it.',
                                                 status: 'error',
                                                 duration: 8000,
                                                 position: 'top',
                                                 isClosable: true,
-                                            })
+                                            });
                                         }}
                                         mt={2}
                                         ml={9}
-                                        colorScheme='red'
+                                        colorScheme="red"
                                     >
                                         Suspend diploma
                                     </Button>
-                                }
+                                )}
 
-                                {user.isAdmin && !diplomaNFT[2] && !diplomaNFT[3] &&
-                                    (
-                                        <HStack title='Accept or reject diploma actions' ml={15} >
-                                            <InfoIcon />
-                                            <Text>Actions:</Text>
-                                            <Button
-                                                _hover={{
-                                                    transform: 'scale(1.05)',
-                                                    boxShadow: 'md',
-                                                }}
-                                                onClick={() => {
-                                                    openAcceptModal(diplomaNFT);
-                                                    toast({
-                                                        description: "Please scroll to the end of the diploma in order to accept it.",
-                                                        status: 'info',
-                                                        duration: 8000,
-                                                        position: 'top',
-                                                        isClosable: true,
-                                                    })
-                                                }}
-                                                title='Accept diplome'
-                                                mt={2} colorScheme='green'
-                                            >
-                                                <CheckIcon />
-                                            </Button>
-                                            <Button
-                                                onClick={() => {
-                                                    openRejectModal(diplomaNFT);
-                                                    toast({
-                                                        description: "Please scroll to the end of the diploma in order to reject it.",
-                                                        status: 'error',
-                                                        duration: 8000,
-                                                        position: 'top',
-                                                        isClosable: true,
-                                                    })
-                                                }}
-                                                _hover={{
-                                                    transform: 'scale(1.05)',
-                                                    boxShadow: 'md',
-                                                }}
-                                                title='Reject diplome'
-                                                mt={2}
-                                                colorScheme='red'
-                                            >
-                                                <CloseIcon />
-                                            </Button>
-                                        </HStack>
-                                    )
-                                }
+                                {user.isAdmin && !diplomaNFT[2] && !diplomaNFT[3] && (
+                                    <HStack title="Accept or reject diploma actions" ml={15}>
+                                        <InfoIcon />
+                                        <Text>Actions:</Text>
+                                        <Button
+                                            _hover={{
+                                                transform: 'scale(1.05)',
+                                                boxShadow: 'md',
+                                            }}
+                                            onClick={() => {
+                                                openAcceptModal(diplomaNFT);
+                                                toast({
+                                                    description:
+                                                        'Please scroll to the end of the diploma in order to accept it.',
+                                                    status: 'info',
+                                                    duration: 8000,
+                                                    position: 'top',
+                                                    isClosable: true,
+                                                });
+                                            }}
+                                            title="Accept diplome"
+                                            mt={2}
+                                            colorScheme="green"
+                                        >
+                                            <CheckIcon />
+                                        </Button>
+                                        <Button
+                                            onClick={() => {
+                                                openRejectModal(diplomaNFT);
+                                                toast({
+                                                    description:
+                                                        'Please scroll to the end of the diploma in order to reject it.',
+                                                    status: 'error',
+                                                    duration: 8000,
+                                                    position: 'top',
+                                                    isClosable: true,
+                                                });
+                                            }}
+                                            _hover={{
+                                                transform: 'scale(1.05)',
+                                                boxShadow: 'md',
+                                            }}
+                                            title="Reject diplome"
+                                            mt={2}
+                                            colorScheme="red"
+                                        >
+                                            <CloseIcon />
+                                        </Button>
+                                    </HStack>
+                                )}
                             </HStack>
                         </Box>
                     </Box>
                 ))}
             </SimpleGrid>
 
-            {selectedDiploma &&
+            {selectedDiploma && (
                 <ViewDetailsModal
                     isOpen={isOpen}
                     onClose={() => {
@@ -277,9 +287,8 @@ const DiplomasDisplay = ({
                     isRejectModal={isRejectModal}
                     handleRejectDiploma={handleRejectDiploma}
                     handleAcceptDiploma={handleAcceptDiploma}
-                >
-                </ViewDetailsModal>
-            }
+                ></ViewDetailsModal>
+            )}
         </>
     );
 };
