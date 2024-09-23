@@ -50,6 +50,9 @@ function App() {
 
       const _collectionService = new CollectionService(provider);
       _collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
+        var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
+
+        setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
         setList(_list);
       });
       setCollectionService(_collectionService);
@@ -86,9 +89,8 @@ function App() {
         await _signerService.checkAddressRoles().then(_list => {
           isAdmin = _list[0];
           isUR = _list[1];
-          setUniversities(_list[2]);
-          setCount(10);
-          // setCount(Math.floor(_list[2] / 6));
+
+          setUniversities([..._list[2]].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
         });
 
         setSignerService(_signerService);
@@ -175,7 +177,7 @@ function App() {
         toast({
           title: 'Wallet connection failed',
           status: 'error',
-          description: 'Transaction rejected !',
+          description: 'Transaction rejected!',
         });
       }
     } finally {
@@ -212,7 +214,7 @@ function App() {
         toast({
           title: 'Wallet connection failed',
           status: 'error',
-          description: 'Transaction rejected !',
+          description: 'Transaction rejected!',
         });
       }
     }
@@ -247,7 +249,7 @@ function App() {
         toast({
           title: 'Wallet connection failed',
           status: 'error',
-          description: 'Transaction rejected !',
+          description: 'Transaction rejected!',
         });
       }
     }
@@ -282,7 +284,7 @@ function App() {
         toast({
           title: 'Wallet connection failed',
           status: 'error',
-          description: 'Transaction rejected !',
+          description: 'Transaction rejected!',
         });
       }
     }
@@ -317,7 +319,7 @@ function App() {
         toast({
           title: 'Wallet connection failed',
           status: 'error',
-          description: 'Transaction rejected !',
+          description: 'Transaction rejected!',
         });
       }
     }
@@ -352,7 +354,7 @@ function App() {
         toast({
           title: 'Wallet connection failed',
           status: 'error',
-          description: 'Transaction rejected !',
+          description: 'Transaction rejected!',
         });
       }
     }
@@ -387,7 +389,7 @@ function App() {
         toast({
           title: 'Wallet connection failed',
           status: 'error',
-          description: 'Transaction rejected !',
+          description: 'Transaction rejected!',
         });
       }
     }
@@ -436,14 +438,56 @@ function App() {
         toast({
           title: 'Wallet connection failed',
           status: 'error',
-          description: 'Transaction rejected !',
+          description: 'Transaction rejected!',
         });
       }
     }
   };
 
-  const showAllDiplomasAgain = async () => {
+  const showAllDiplomasAgain = () => {
     setSignleDiploma(null);
+  }
+
+  const changeUniversityFilter = (universityName) => {
+    setUniversityName(universityName);
+
+    toast({
+      title: 'Diploma filter applied',
+      status: 'loading',
+      description: 'Diplomas will be updated soon',
+      duration: 4000,
+    });
+
+    collectionService.getDiplomasWithPagination(1, universityName).then(_list => {
+      var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
+
+      setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
+      setList(_list);
+    });
+  }
+
+  const changePage = (page) => {
+    // setCurrentPage(page);
+
+    toast({
+      title: 'Diploma filter applied!',
+      status: 'loading',
+      description: 'Diplomas will be updated soon.',
+      duration: 2000,
+    });
+
+    collectionService.getDiplomasWithPagination(page, universityName).then(_list => {
+      if(_list.length >= 1) {
+        setList(_list);
+      } else {
+        toast.closeAll();
+        toast({
+          status: 'error',
+          description: 'There are no diplomas available for display on the selected page.',
+          duration: 5000,
+        });
+      }
+    });
   }
 
   return (
@@ -460,9 +504,9 @@ function App() {
         handleRemoveUR={handleRemoveUR}
         getDiplomaByID={getDiplomaByID}
         universities={universities}
+        changeUniversityFilter={changeUniversityFilter}
       />
 
-      {list.length > 0 && 
       <DiplomasDisplay
         list={list}
         singleDiploma={singleDiploma}
@@ -471,9 +515,10 @@ function App() {
         handleAcceptDiploma={handleAcceptDiploma} 
         count={count}
         showAllDiplomasAgain={showAllDiplomasAgain}
-      />}
+        changePage={changePage}
+      />
       
-      {list.length == 0 && (
+      {/* {count === 0 && (
         <HStack
           style={{
             paddingTop: '100px',
@@ -484,7 +529,7 @@ function App() {
           </Text>
           <Spinner />
         </HStack>
-      )}
+      )} */}
     </>
   );
 }

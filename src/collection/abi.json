@@ -265,43 +265,55 @@
 				"components": [
 					{
 						"internalType": "uint256",
-						"name": "diplomaID",
+						"name": "numOfDiplomas",
 						"type": "uint256"
 					},
 					{
-						"internalType": "string",
-						"name": "diplomaDate",
-						"type": "string"
-					},
-					{
-						"internalType": "bool",
-						"name": "isVerified",
-						"type": "bool"
-					},
-					{
-						"internalType": "bool",
-						"name": "isSuspended",
-						"type": "bool"
-					},
-					{
-						"internalType": "string",
-						"name": "universityName",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "diplomaIPFSLink",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "comment",
-						"type": "string"
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "diplomaID",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "diplomaDate",
+								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "isVerified",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "isSuspended",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "universityName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "diplomaIPFSLink",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "comment",
+								"type": "string"
+							}
+						],
+						"internalType": "struct DiplomasContract.Diploma[]",
+						"name": "diplomas",
+						"type": "tuple[]"
 					}
 				],
-				"internalType": "struct DiplomasContract.Diploma[]",
+				"internalType": "struct DiplomasContract.PaginationData",
 				"name": "",
-				"type": "tuple[]"
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",

@@ -27,7 +27,8 @@ const Header = ({
     handleAddUR,
     handleRemoveUR,
     getDiplomaByID,
-    universities
+    universities,
+    changeUniversityFilter
 }) => {
     const {
         isOpen: isCreateOpen,
@@ -124,10 +125,17 @@ const Header = ({
                     </HStack>
                 )}
 
-                <Select 
-                    w={170} 
+                <Select
+                    w={170}
+                    onChange={(e) => changeUniversityFilter(e.target.value)}
                 >
-                        <option>Select University</option>
+                    <option
+                        key={''}
+                        value={''}
+                        title='This options displays all diplomas'>
+                        {user.signer ? 'Select University'
+                            : 'You must connect wallet in order to filter universities'}
+                    </option>
                     {universities && universities.map((option) => (
                         <option key={option} value={option}>
                             {option}
@@ -146,9 +154,9 @@ const Header = ({
                         setSearchValue(e.target.value);
                     }}
                 />
-                <Button 
+                <Button
                     borderRadius={"0 20px 20px 0"}
-                    onClick={() => {getDiplomaByID(Number(searchValue))}}
+                    onClick={() => { getDiplomaByID(Number(searchValue)) }}
                 >
                     <Search2Icon mr={1} />
                 </Button>

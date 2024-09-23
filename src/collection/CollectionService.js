@@ -5,7 +5,7 @@ import { getMetadata } from "../service/IPFSService"
 export default class CollectionService {
     constructor(provider) {
         this.contract = new Contract(
-            "0x99FDAB56758D370887F91F1116981602b59cBBE6",
+            "0x883fb0C00b0ec0C8d3f54457308349Be8dDbc545",
             abi,
             provider);
     }
@@ -54,16 +54,22 @@ export default class CollectionService {
     async getDiplomasWithPagination(pageNumber, universityName) {
         const data = await this.contract.getDiplomasWithPagination(pageNumber, universityName);
 
+        if (Number(data[0]) === 0) {
+            return {...data};
+        }
+
         const diplomas = await Promise.all(
-            data.map(async (diploma) => {
+            data[1].map(async (diploma) => {
                 const metadata = await getMetadata(diploma.diplomaIPFSLink);
 
                 return {
+                    numberOfDiplomas: data[0],
                     ...diploma,
                     ...metadata,
                 };
             })
         );
+        
         return diplomas;
     }
 }

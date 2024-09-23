@@ -31,6 +31,7 @@ const DiplomasDisplay = ({
     handleAcceptDiploma,
     count,
     showAllDiplomasAgain,
+    changePage
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -72,8 +73,9 @@ const DiplomasDisplay = ({
                 }}
             ></div>
             <PageChoices
-                count={10}
-            //count={count}
+                //count={10}
+                count={count}
+                changePage={changePage}
             />
             {singleDiploma && (
                 <Center>
@@ -84,6 +86,7 @@ const DiplomasDisplay = ({
             )}
             <SimpleGrid columns={singleDiploma ? 1 : 3} spacing={5} mt={7} ml={5} mb={5}>
                 {list.map(diplomaNFT => (
+
                     <Box
                         key={diplomaNFT[0]}
                         maxW="sm"
@@ -102,6 +105,8 @@ const DiplomasDisplay = ({
                     >
                         <Center>
                             <Image
+                                // maxHeight={'300px'}
+                                // maxWidth={'300px'}
                                 src={
                                     'https://ipfs.filebase.io/ipfs/' +
                                     diplomaNFT.universityLogo[0]
