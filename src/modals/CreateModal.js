@@ -87,13 +87,13 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
               </FormLabel>
               <HStack>
                 <Input
-                  placeholder="Stefan"
+                  placeholder="John"
                   onChange={e => {
                     setFormData({ ...formData, name: e.target.value });
                   }}
                 />
                 <Input
-                  placeholder="Gogić"
+                  placeholder="Doe"
                   onChange={e => {
                     setFormData({ ...formData, surname: e.target.value });
                   }}
@@ -278,7 +278,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
               >
                 <FormLabel>Student GPA:</FormLabel>
                 <Input
-                  placeholder='4.0'
+                  placeholder='3.5/4.0'
                   w={'30%'}
                   onChange={e => {
                     setFormData({

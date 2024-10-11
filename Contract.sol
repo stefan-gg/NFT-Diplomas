@@ -63,6 +63,7 @@ contract DiplomasContract {
         return string(result);
     }
 
+    // ************************************************************** revert InvalidValue(_value);
     function addAdmin(address newAdmin) external onlyAdmin {
         admins[newAdmin] = true;
     }
@@ -76,9 +77,9 @@ contract DiplomasContract {
         universityRepresentatives[newUR] = true;
     }
 
-    function removeUniversityRepresentative(address ure) external onlyAdmin {
-        require(universityRepresentatives[ure] == true, "UR doesn't exist");
-        universityRepresentatives[ure] = false;
+    function removeUniversityRepresentative(address ur) external onlyAdmin {
+        require(universityRepresentatives[ur] == true, "UR doesn't exist");
+        universityRepresentatives[ur] = false;
     }
 
     function addDiploma(
@@ -138,6 +139,7 @@ contract DiplomasContract {
         view
         returns (Diploma memory)
     {
+        //require da se doda da se proveri dal postoji diploma mozda
         return diplomas[diplomaID];
     }
 
@@ -158,12 +160,13 @@ contract DiplomasContract {
         Diploma[] memory returnDiplomas;
 
         uint256 universityNameLength = bytes(universityName).length;
+        uint256 pageSize = 6;
 
         uint256 size = universityNameLength > 0
             ? universityDiplomas[universityName].length
             : count;
-        uint256 start = pageNumber > 0 ? (pageNumber - 1) * 6 : 0;
-        uint256 end = pageNumber > 0 ? pageNumber * 6 : 6;
+        uint256 start = pageNumber > 0 ? (pageNumber - 1) * pageSize : 0;
+        uint256 end = pageNumber > 0 ? pageNumber * pageSize : pageSize;
 
         if (start > size) {
             returnDiplomas = new Diploma[](0);

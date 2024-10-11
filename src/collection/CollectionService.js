@@ -5,7 +5,8 @@ import { getMetadata } from "../service/IPFSService"
 export default class CollectionService {
     constructor(provider) {
         this.contract = new Contract(
-            "0x883fb0C00b0ec0C8d3f54457308349Be8dDbc545",
+            // "0xD6146bDdA150695cFfedEFB53b191B334F7Fd230",
+            "0x75f08388f9b1e409b79ad7591144C9dF73b7A316",
             abi,
             provider);
     }

@@ -55,8 +55,6 @@ export async function getFileCid(logo) {
   const promises = logo.map(file => uploadImage(file));
   const cid = await Promise.all(promises);
   return cid;
-  // const cid = await uploadImage(file);
-  // return cid;
 }
 
 export async function getMetadata(url) {
@@ -64,8 +62,6 @@ export async function getMetadata(url) {
     const response = await axios.get(url);
     return response.data;
   } catch (error) {
-    console.error(error);
-
     return {};
   }
 }

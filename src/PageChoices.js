@@ -8,6 +8,7 @@ import {
     Link,
     FormLabel,
     FormControl,
+    Center,
 } from '@chakra-ui/react';
 
 import { useState } from 'react';
@@ -35,7 +36,8 @@ const PageChoices = ({
     };
 
     return (
-        <VStack>
+        <Center>
+        <HStack >
             <HStack>
                 <Text title='Each page will display 6 diplomas'>
                     <InfoIcon mb={1} /> Choose page:
@@ -71,12 +73,12 @@ const PageChoices = ({
                 </Button>
             </HStack>
             <form>
-                <FormControl>
+                <FormControl ml={10}>
                     <HStack>
-                        <FormLabel w={'140%'}>Or insert custom one...</FormLabel>
+                        <FormLabel w={'70%'}>Or insert custom one...</FormLabel>
                         <Input 
                             isRequired 
-                            w={'50%'} 
+                            w={'30%'} 
                             type='number' 
                             step={1} 
                             min="1" 
@@ -87,7 +89,8 @@ const PageChoices = ({
                     </HStack>
                 </FormControl>
             </form>
-        </VStack>
+        </HStack>
+        </Center>
     );
 };
 

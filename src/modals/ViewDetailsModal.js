@@ -16,9 +16,11 @@ import {
     ModalOverlay,
     Text,
     Textarea,
+    useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { ethers } from 'ethers';
+import { CopyIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 
 const ViewDetailsModal = ({
     isOpen,
@@ -31,6 +33,12 @@ const ViewDetailsModal = ({
 }) => {
     const [check, setCheck] = useState(false);
     const [comment, setComment] = useState('');
+
+    const toast = useToast({
+        position: 'top',
+        isClosable: true,
+        duration: 3000,
+    });
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -54,6 +62,65 @@ const ViewDetailsModal = ({
                         >
                             Official IPFS link <ExternalLinkIcon mx="2px" />
                         </Link>
+
+                        <Box mt={5}>
+                            <Button
+                                title='Copy address'
+                                size={"sm"}
+                                onClick={async () => {
+                                    try {
+                                        await navigator.clipboard.writeText(diplomaNFT[7]);
+                                        toast({
+                                            title: 'Copied to clipboard!',
+                                            status: 'success',
+                                            duration: 2000,
+                                        });
+                                    } catch (error) {
+                                        toast({
+                                            title: 'Failed to copy to clipboard.',
+                                            status: 'error',
+                                            duration: 2000,
+                                        });
+                                    }
+                                }}
+                            >
+                                <CopyIcon />
+                            </Button>
+                            Added by: {diplomaNFT[7]}
+                        </Box>
+                        <Box mb={5}>
+                            <Button
+                                title='Copy address'
+                                size={"sm"}
+                                onClick={async () => {
+                                    try {
+                                        if (diplomaNFT[8] !== '0x0000000000000000000000000000000000000000') {
+                                            toast({
+                                                title: 'Copied to clipboard!',
+                                                status: 'success',
+                                                duration: 2000,
+                                            });
+                                            await navigator.clipboard.writeText(diplomaNFT[8]);
+                                        } else {
+                                            toast({
+                                                title: 'Cannot copy address to clipboard.',
+                                                status: 'error',
+                                                duration: 2000,
+                                            });
+                                        }
+                                    } catch (error) {
+                                        toast({
+                                            title: 'Failed to copy to clipboard.',
+                                            status: 'error',
+                                            duration: 2000,
+                                        });
+                                    }
+                                }}
+                            >
+                                <CopyIcon />
+                            </Button>
+                            Accepted by: {!ethers.isAddress(diplomaNFT[8]) ? diplomaNFT[8] : 'Diploma is not accepted/rejected yet'}
+                        </Box>
 
                         <HStack>
                             <Text>Student name and surname:</Text>

@@ -136,10 +136,6 @@ function App() {
       status: 'info',
     });
 
-    // console.log(data);
-
-    // console.log(data.universityLogo);
-
     const logoCID = await getFileCid(data.universityLogo);
 
     data.universityLogo = logoCID;
@@ -160,7 +156,20 @@ function App() {
                 title: 'Your Diploma NFT is created!',
                 status: 'success',
                 description:
-                  'You can now refresh the market too see your new Diploma NFT',
+                  'You will see your new Diploma NFT soon',
+              });
+
+              // Loading all the diplomas again 
+              // and show new one it if there is space on the page
+              collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
+                var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
+
+                setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
+                setList(_list);
+              });
+
+              signerService.checkAddressRoles().then(_list => {
+                setUniversities([..._list[2]].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
               });
             });
           });
@@ -200,6 +209,12 @@ function App() {
               title: 'Diploma with ID: ' + diplomaID.toString() + ' is rejected/suspended.',
               status: 'error',
             });
+
+            // Loading all the diplomas again 
+            // to show changes
+            collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
+              setList(_list);
+            });
           });
         });
       }
@@ -234,6 +249,12 @@ function App() {
             toast({
               title: 'Diploma with ID: ' + diplomaID.toString() + ' is accepted.',
               status: 'success',
+            });
+
+            // Loading all the diplomas again 
+            // to show changes
+            collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
+              setList(_list);
             });
           });
         });
@@ -407,23 +428,23 @@ function App() {
 
         await collectionService.getDiplomaByID(diplomaID).then(_diploma => {
 
-            if(_diploma[0].universityName === ''){
+          if (_diploma[0].universityName === '') {
 
-              toast.closeAll();
+            toast.closeAll();
 
-              toast({
-                title: 'Diploma with ID:' + diplomaID + " does not exist.",
-                status: 'error',
-              });
-            } else {
-              toast({
-                title: 'Diploma with ID:' + diplomaID + " is found.",
-                status: 'success',
-              });
+            toast({
+              title: 'Diploma with ID:' + diplomaID + " does not exist.",
+              status: 'error',
+            });
+          } else {
+            toast({
+              title: 'Diploma with ID:' + diplomaID + " is found.",
+              status: 'success',
+            });
 
-              setSignleDiploma(_diploma);
+            setSignleDiploma(_diploma);
 
-            }
+          }
 
         });
       }
@@ -477,7 +498,7 @@ function App() {
     });
 
     collectionService.getDiplomasWithPagination(page, universityName).then(_list => {
-      if(_list.length >= 1) {
+      if (_list.length >= 1) {
         setList(_list);
       } else {
         toast.closeAll();
@@ -489,6 +510,14 @@ function App() {
       }
     });
   }
+
+  const logSearch = async (address) => {
+    if (signerService) {
+
+      return await signerService.getLogs(address);
+    }
+  } 
+  
 
   return (
     <>
@@ -505,20 +534,22 @@ function App() {
         getDiplomaByID={getDiplomaByID}
         universities={universities}
         changeUniversityFilter={changeUniversityFilter}
+        logSearch={logSearch}
       />
 
-      <DiplomasDisplay
+      {count > 0 && <DiplomasDisplay
         list={list}
         singleDiploma={singleDiploma}
         user={user}
         handleRejectDiploma={handleRejectDiploma}
-        handleAcceptDiploma={handleAcceptDiploma} 
+        handleAcceptDiploma={handleAcceptDiploma}
         count={count}
         showAllDiplomasAgain={showAllDiplomasAgain}
         changePage={changePage}
-      />
-      
-      {/* {count === 0 && (
+        logSearch={logSearch}
+      />}
+
+      {count === 0 && (
         <HStack
           style={{
             paddingTop: '100px',
@@ -529,7 +560,7 @@ function App() {
           </Text>
           <Spinner />
         </HStack>
-      )} */}
+      )}
     </>
   );
 }

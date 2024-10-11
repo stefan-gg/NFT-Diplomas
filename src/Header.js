@@ -8,6 +8,7 @@ import {
     useDisclosure,
     Flex,
     Input,
+    useToast,
 } from '@chakra-ui/react';
 import { Search2Icon } from '@chakra-ui/icons'
 import { ethers } from 'ethers';
@@ -60,6 +61,12 @@ const Header = ({
         onCreateOpen();
     };
 
+    const toast = useToast({
+        position: 'top',
+        isClosable: true,
+        duration: 3000,
+    });
+
     return (
         <Flex
             w={'100%'}
@@ -73,7 +80,7 @@ const Header = ({
             <HStack >
                 {user.isUR && (
                     <Button
-                        // colorScheme='cyan'
+                        colorScheme='cyan'
                         size={{ base: 'md', md: 'lg', lg: 'lg' }}
                         w={200}
                         m={2}
@@ -156,7 +163,20 @@ const Header = ({
                 />
                 <Button
                     borderRadius={"0 20px 20px 0"}
-                    onClick={() => { getDiplomaByID(Number(searchValue)) }}
+                    onClick={() => {
+                        var searchID = Number(searchValue);
+                        if (searchID < 0) {
+                            toast(
+                                {
+                                    title: 'DiplomaID cannot be negative!',
+                                    status: 'error',
+                                    duration: 2000,
+                                }
+                            )
+                        } else {
+                            getDiplomaByID(searchID);
+                        }
+                    }}
                 >
                     <Search2Icon mr={1} />
                 </Button>
