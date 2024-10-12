@@ -24,6 +24,7 @@ import ViewDetailsModal from './modals/ViewDetailsModal';
 import LogsModal from './modals/LogsModal';
 import PageChoices from './PageChoices';
 import { useState } from 'react';
+import { ethers } from 'ethers';
 
 const DiplomasDisplay = ({
     list,
@@ -37,20 +38,24 @@ const DiplomasDisplay = ({
     logSearch
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { 
-        isOpen: isLogsOpen, 
-        onOpen: onLogsOpen, 
+    const {
+        isOpen: isLogsOpen,
+        onOpen: onLogsOpen,
         onClose: onLogsClose } = useDisclosure();
 
     const [selectedDiploma, setSelectedDiploma] = useState(null);
     const [isAcceptModal, setIsAcceptModal] = useState(null);
     const [isRejectModal, setIsRejectModal] = useState(null);
-    // const [isDisplaySingle, setIsDisplaySingle] = useState(!!singleDiploma);
+    const [address, setAddress] = useState(null);
     const [logs, setLogs] = useState([]);
 
     const _list = list;
 
-    const toast = useToast();
+    const toast = useToast({
+        position: 'top',
+        isClosable: true,
+        duration: 3000,
+    });
 
     const openMoreDetails = diploma => {
         setSelectedDiploma(diploma);
@@ -97,35 +102,44 @@ const DiplomasDisplay = ({
                     </Button>
                 </Center>
             )}
-            
+
             <HStack mt={4}>
-                <Input 
-                    ml={5} 
-                    w={'26%'} 
+                <Input
+                    ml={5}
+                    w={'26%'}
                     maxLength={42}
+                    onChange={(e) => setAddress(e.target.value)}
                 />
-                <Button 
+                <Button
                     onClick={
                         () => {
-                            logSearch("0xF1276b88E0F7515A833273D877d35bf6934042bf")
-                            .then(result => {
-                                console.log(result.length);
-                                if (result.length > 0) openLogs(result);
-                                else toast({
-                                    description:'There are no logs for inserted address.',
+                            if (!ethers.isAddress(address)) {
+                                toast({
                                     status: 'error',
-                                    duration: 3000,
-                                    position: 'top',
-                                    isClosable: true,
+                                    description: 'Invalid address format!',
+                                    duration: 4000,
                                 });
-                            })
+                            } else {
+                                logSearch(address)
+                                    .then(result => {
+                                        console.log(result.length);
+                                        if (result.length > 0) openLogs(result);
+                                        else toast({
+                                            description: 'There are no logs for inserted address.',
+                                            status: 'error',
+                                            duration: 3000,
+                                            position: 'top',
+                                            isClosable: true,
+                                        });
+                                    })
+                            }
                         }
-                    } 
+                    }
                 >
                     Check log history for address
                 </Button>
             </HStack>
-            
+
             <SimpleGrid columns={singleDiploma ? 1 : 3} spacing={5} mt={7} ml={5} mb={5}>
                 {list.map(diplomaNFT => (
 

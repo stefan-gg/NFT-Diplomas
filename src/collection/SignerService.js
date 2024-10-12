@@ -73,12 +73,12 @@ export default class CollectionService {
         // console.log(addedEvents.length, events.length);
         // console.log(events[0].args, events[0].eventName);
 
-        // console.log([
-        //     ...adminRoleEvents,
-        //     ...urRoleEvents,
-        //     ...diplomaCreationEvents,
-        //     ...diplomaVerificationEvents,
-        // ]);
+        console.log([
+            ...adminRoleEvents,
+            ...urRoleEvents,
+            ...diplomaCreationEvents,
+            ...diplomaVerificationEvents,
+        ]);
 
         return [
             ...adminRoleEvents,
