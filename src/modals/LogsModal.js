@@ -1,10 +1,9 @@
-import { CopyIcon, Search2Icon } from '@chakra-ui/icons';
+import { CopyIcon } from '@chakra-ui/icons';
 import {
     Box,
     Button,
     Center,
     HStack,
-    Input,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -26,10 +25,6 @@ const LogsModal = ({
         isClosable: true,
         duration: 3000,
     });
-
-    const returnList = (list) => {
-        return list;
-    }
 
     const formatTime = (timestamp) => {
         const date = new Date(Number(timestamp) * 1000);
@@ -76,27 +71,7 @@ const LogsModal = ({
                 <ModalCloseButton />
                 <ModalBody>
 
-                    <HStack>
-                        <Input
-                            borderRadius={"20px 0 0 20px"}
-                            mr={-1}
-                            placeholder="Search diploma by ID"
-                            onChange={(e) => {
-
-                            }}
-                        />
-                        <Button
-                            mr={4}
-                            borderRadius={"0 20px 20px 0"}
-                            onClick={() => {
-
-                            }}
-                        >
-                            <Search2Icon mr={1} />
-                        </Button>
-                    </HStack>
-
-                    {returnList(logs).map(log => (
+                    {logs.map(log => (
 
                         <Center>
                             <HStack mt={5}>
