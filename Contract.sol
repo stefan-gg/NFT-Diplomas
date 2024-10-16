@@ -8,7 +8,6 @@ contract DiplomasContract {
 
     struct Diploma {
         uint256 diplomaID;
-        string diplomaDate;
         bool isVerified;
         bool isSuspended;
         string universityName;
@@ -36,10 +35,10 @@ contract DiplomasContract {
     mapping(uint256 => string) private universityID;
     mapping(string => uint256[]) universityDiplomas;
 
-    event DiplomaCreation(address indexed sender, uint256 diplomaID);
-    event DiplomaVerification(address indexed admin, uint256 diplomaID, bool isAccepted);
-    event AdminRoleAdministration(address indexed admin, address targetAddress, bool isRoleAdded);
-    event URRoleAdministration(address indexed admin, address targetAddress, bool isRoleAdded);
+    event DiplomaCreation(address indexed sender, uint256 diplomaID, uint256 timestamp);
+    event DiplomaVerification(address indexed admin, uint256 diplomaID, bool isAccepted, uint256 timestamp);
+    event AdminRoleAdministration(address indexed admin, address targetAddress, bool isRoleAdded, uint256 timestamp);
+    event URRoleAdministration(address indexed admin, address targetAddress, bool isRoleAdded, uint256 timestamp);
 
     error InvalidAddress(address _address);
 
@@ -75,7 +74,7 @@ contract DiplomasContract {
         else revert InvalidAddress(newAdmin);
 
         admins[newAdmin] = true;
-        emit AdminRoleAdministration(msg.sender, newAdmin, true);
+        emit AdminRoleAdministration(msg.sender, newAdmin, true, block.timestamp);
     }
 
     function removeAdmin(address removeAdminAddress) external onlyAdmin {
@@ -84,7 +83,7 @@ contract DiplomasContract {
         else revert InvalidAddress(removeAdminAddress);
 
         admins[removeAdminAddress] = false;
-        emit AdminRoleAdministration(msg.sender, removeAdminAddress, false);
+        emit AdminRoleAdministration(msg.sender, removeAdminAddress, false, block.timestamp);
     }
 
     function addUniversityRepresentative(address newUR) external onlyAdmin {
@@ -98,7 +97,7 @@ contract DiplomasContract {
         else revert InvalidAddress(newUR);
 
         universityRepresentatives[newUR] = true;
-        emit URRoleAdministration(msg.sender, newUR, true);
+        emit URRoleAdministration(msg.sender, newUR, true, block.timestamp);
     }
 
     function removeUniversityRepresentative(address ur) external onlyAdmin {
@@ -107,22 +106,18 @@ contract DiplomasContract {
         else revert InvalidAddress(ur);
 
         universityRepresentatives[ur] = false;
-        emit URRoleAdministration(msg.sender, ur, false);
+        emit URRoleAdministration(msg.sender, ur, false, block.timestamp);
     }
 
     function addDiploma(
-        string memory date,
         string memory diplomaIPFSLink,
         string memory universityName
     ) external onlyUniversityRepresentative {
-        require(bytes(diplomaIPFSLink).length > 10, "Invalid IPFS link");
-        require(bytes(universityName).length > 0, "Invalid university name");
-        require(bytes(date).length > 5, "Invalid date");
-        require(bytes(universityName).length <= 256, "University name too long");
+        require(bytes(diplomaIPFSLink).length >= 46, "Invalid IPFS link");
+        require(bytes(universityName).length > 2 && bytes(universityName).length <= 100, "Invalid university name");
 
         Diploma memory newDiploma = Diploma(
             count,
-            date,
             false,
             false,
             universityName,
@@ -141,7 +136,7 @@ contract DiplomasContract {
 
         universityDiplomas[universityName].push(count);
 
-        emit DiplomaCreation(msg.sender, count);
+        emit DiplomaCreation(msg.sender, count, block.timestamp);
 
         count++;
     }
@@ -156,7 +151,7 @@ contract DiplomasContract {
 
         diplomas[id].isVerified = true;
         diplomas[id].adminAddress = msg.sender;
-        emit DiplomaVerification(msg.sender, id, true);
+        emit DiplomaVerification(msg.sender, id, true, block.timestamp);
     }
 
     function suspendDiploma(uint256 id, string memory comment)
@@ -171,7 +166,7 @@ contract DiplomasContract {
         diplomas[id].isSuspended = true;
         diplomas[id].comment = comment;
         diplomas[id].adminAddress = msg.sender;
-        emit DiplomaVerification(msg.sender, id, false);
+        emit DiplomaVerification(msg.sender, id, false, block.timestamp);
     }
 
     function getDiplomaByID(uint256 diplomaID)

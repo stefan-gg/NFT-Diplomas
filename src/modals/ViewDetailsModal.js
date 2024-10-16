@@ -40,12 +40,39 @@ const ViewDetailsModal = ({
         duration: 3000,
     });
 
+    const copyAddress = (diplomaNFT) => {
+        return async () => {
+            try {
+                if (diplomaNFT[7] !== '0x0000000000000000000000000000000000000000') {
+                    toast({
+                        title: 'Copied to clipboard!',
+                        status: 'success',
+                        duration: 2000,
+                    });
+                    await navigator.clipboard.writeText(diplomaNFT[7]);
+                } else {
+                    toast({
+                        title: 'Cannot copy address to clipboard.',
+                        status: 'error',
+                        duration: 2000,
+                    });
+                }
+            } catch (error) {
+                toast({
+                    title: 'Failed to copy to clipboard.',
+                    status: 'error',
+                    duration: 2000,
+                });
+            }
+        };
+    }
+
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader
-                    textDecoration={diplomaNFT[3] ? 'line-through' : 'none'}
+                    textDecoration={diplomaNFT[2] ? 'line-through' : 'none'}
                     title="Student data"
                 >
                     Student ID#{diplomaNFT.studentId}
@@ -53,12 +80,12 @@ const ViewDetailsModal = ({
 
                 <ModalCloseButton />
                 <ModalBody>
-                    <Box textDecoration={diplomaNFT[3] ? 'line-through' : 'none'}>
+                    <Box textDecoration={diplomaNFT[2] ? 'line-through' : 'none'}>
                         <Link
                             isExternal
                             color="teal.500"
-                            href={diplomaNFT[5]}
-                            title={diplomaNFT[5]}
+                            href={diplomaNFT[4]}
+                            title={diplomaNFT[4]}
                         >
                             Official IPFS link <ExternalLinkIcon mx="2px" />
                         </Link>
@@ -69,7 +96,7 @@ const ViewDetailsModal = ({
                                 size={"sm"}
                                 onClick={async () => {
                                     try {
-                                        await navigator.clipboard.writeText(diplomaNFT[7]);
+                                        await navigator.clipboard.writeText(diplomaNFT[6]);
                                         toast({
                                             title: 'Copied to clipboard!',
                                             status: 'success',
@@ -86,40 +113,17 @@ const ViewDetailsModal = ({
                             >
                                 <CopyIcon />
                             </Button>
-                            Added by: {diplomaNFT[7]}
+                            Added by: {diplomaNFT[6]}
                         </Box>
                         <Box mb={5}>
                             <Button
                                 title='Copy address'
                                 size={"sm"}
-                                onClick={async () => {
-                                    try {
-                                        if (diplomaNFT[8] !== '0x0000000000000000000000000000000000000000') {
-                                            toast({
-                                                title: 'Copied to clipboard!',
-                                                status: 'success',
-                                                duration: 2000,
-                                            });
-                                            await navigator.clipboard.writeText(diplomaNFT[8]);
-                                        } else {
-                                            toast({
-                                                title: 'Cannot copy address to clipboard.',
-                                                status: 'error',
-                                                duration: 2000,
-                                            });
-                                        }
-                                    } catch (error) {
-                                        toast({
-                                            title: 'Failed to copy to clipboard.',
-                                            status: 'error',
-                                            duration: 2000,
-                                        });
-                                    }
-                                }}
+                                onClick={copyAddress(diplomaNFT)}
                             >
                                 <CopyIcon />
                             </Button>
-                            Accepted by: {!ethers.isAddress(diplomaNFT[8]) ? diplomaNFT[8] : 'Diploma is not accepted/rejected yet'}
+                            {diplomaNFT[1] ? "Accepted by:" : "Rejeted by:"} {ethers.isAddress(diplomaNFT[7]) ? diplomaNFT[7] : 'Diploma is not accepted/rejected yet'}
                         </Box>
 
                         <HStack>
@@ -235,7 +239,7 @@ const ViewDetailsModal = ({
                             >
                                 {isAcceptModal
                                     ? 'Accept diploma'
-                                    : diplomaNFT[2]
+                                    : diplomaNFT[1]
                                         ? 'Suspend diploma'
                                         : 'Reject diploma'}
                             </Button>

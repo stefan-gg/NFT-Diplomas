@@ -14,7 +14,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Text
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import {
@@ -105,6 +104,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
               </FormLabel>
               <Input
                 type="date"
+                max={new Date().toISOString().split('T')[0]}
                 onChange={e => {
                   setFormData({
                     ...formData,
@@ -118,6 +118,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
               </FormLabel>
               <Input
                 type="date"
+                max={new Date().toISOString().split('T')[0]}
                 onChange={e => {
                   setFormData({
                     ...formData,
@@ -274,7 +275,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
 
               <HStack
                 title="This site does not calculate student's GPA, you must insert GPA from student's diploma."
-                mt={5}      
+                mt={5}
               >
                 <FormLabel>Student GPA:</FormLabel>
                 <Input
@@ -329,7 +330,6 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                             },
                           },
                         }));
-                        console.log(formData);
                       }}
                     />
                     <Button

@@ -1,8 +1,10 @@
+import { CopyIcon, Search2Icon } from '@chakra-ui/icons';
 import {
     Box,
     Button,
+    Center,
     HStack,
-    Link,
+    Input,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -10,7 +12,7 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    VStack,
+    useToast,
 } from '@chakra-ui/react';
 
 const LogsModal = ({
@@ -19,8 +21,52 @@ const LogsModal = ({
     logs
 }) => {
 
+    const toast = useToast({
+        position: 'top',
+        isClosable: true,
+        duration: 3000,
+    });
+
+    const returnList = (list) => {
+        return list;
+    }
+
+    const formatTime = (timestamp) => {
+        const date = new Date(Number(timestamp) * 1000);
+        const formattedDate = date.toLocaleDateString();
+
+        return formattedDate;
+    };
+
+    const copyAddress = (address) => {
+        return async () => {
+            try {
+                if (address !== '0x0000000000000000000000000000000000000000') {
+                    toast({
+                        title: 'Copied to clipboard!',
+                        status: 'success',
+                        duration: 2000,
+                    });
+                    await navigator.clipboard.writeText(address);
+                } else {
+                    toast({
+                        title: 'Cannot copy address to clipboard.',
+                        status: 'error',
+                        duration: 2000,
+                    });
+                }
+            } catch (error) {
+                toast({
+                    title: 'Failed to copy to clipboard.',
+                    status: 'error',
+                    duration: 2000,
+                });
+            }
+        };
+    }
+
     return (
-        <Modal  isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>
@@ -29,54 +75,95 @@ const LogsModal = ({
 
                 <ModalCloseButton />
                 <ModalBody>
-                    {logs.map(log => (
 
-                        // event AdminRoleAdministration(address indexed admin, address targetAddress, bool isRoleAdded);
-                        // event URRoleAdministration(address indexed admin, address targetAddress, bool isRoleAdded);
+                    <HStack>
+                        <Input
+                            borderRadius={"20px 0 0 20px"}
+                            mr={-1}
+                            placeholder="Search diploma by ID"
+                            onChange={(e) => {
 
-                        <HStack mt={5}>
+                            }}
+                        />
+                        <Button
+                            mr={4}
+                            borderRadius={"0 20px 20px 0"}
+                            onClick={() => {
 
-                            {log.eventName === "DiplomaCreation" && (
-                                <Box border={"2px solid green"}>
-                                    <Box ml={1}>
-                                        Diploma created by: {log.args[0]}
-                                    </Box>
-                                    <Box ml={1}>
-                                        Diploma ID: {log.args[1].toString()}
-                                    </Box>
-                                </ Box>
-                            )}
+                            }}
+                        >
+                            <Search2Icon mr={1} />
+                        </Button>
+                    </HStack>
 
-                            {log.eventName === "DiplomaVerification" && (
-                                <Box border={log.args[2]? "2px solid blue" : "2px solid red"}>
-                                    <Box ml={1}>
-                                        Diploma with ID: {log.args[1].toString()}
-                                    </Box>
-                                    <Box ml={1}>
-                                        Was {log.args[2] ? "accepted" : "rejected"} by {log.args[0]}
-                                    </Box>
-                                </ Box>
-                            )}
+                    {returnList(logs).map(log => (
 
-                            {log.eventName === "AdminRoleAdministration" && (
-                                <Box border={log.args[2] ? "2px solid blue" : "2px solid red"}>
-                                    <Box ml={1}>
-                                        Admin with address {log.args[0]} {log.args[2] ? " added admin role" : " removed admin role from"}  {log.args[1]}
-                                    </Box>
-                                    {console.log(log.args[2])}
-                                </ Box>
-                            )}
+                        <Center>
+                            <HStack mt={5}>
 
-                            {log.eventName === "URRoleAdministration" && (
-                                <Box border={log.args[2] ? "2px solid blue" : "2px solid red"}>
-                                    <Box ml={1}>
-                                        Admin with address {log.args[0]} {log.args[2]? " added UR role to" : " removed UR role from"}  {log.args[1]}
-                                    </Box>
-                                    {console.log(log.args[2])}
-                                </ Box>
-                            )}
+                                {log.eventName === "DiplomaCreation" && (
+                                    <Box p={2} backgroundColor={"rgba(0, 255, 0, 0.3)"}>
+                                        <Box>
+                                            Created diploma with ID: {log.args[1].toString()}
+                                        </Box>
+                                        <Box>Timestamp: {formatTime(log.args[2])}</Box>
+                                    </ Box>
+                                )}
 
-                        </HStack>
+                                {log.eventName === "DiplomaVerification" && (
+                                    <Box p={2}
+                                        backgroundColor={log.args[2] ? "rgba(0, 255, 0, 0.3)" : "rgba(255, 0, 0, 0.3)"}
+                                    >
+                                        <Box>
+                                            {log.args[2] ? "Accepted" : "Rejected"} diploma with ID: {log.args[1].toString()}
+                                        </Box>
+                                        <Box>
+                                            Timestamp: {formatTime(log.args[3])}
+                                        </Box>
+                                    </ Box>
+                                )}
+
+                                {log.eventName === "AdminRoleAdministration" && (
+                                    <Box p={2}
+                                        backgroundColor={log.args[2] ? "rgba(0, 0, 255, 0.3)" : "rgba(255, 0, 0, 0.3)"}
+                                    >
+                                        <Box>
+                                            <Button
+                                                title='Copy address'
+                                                size={"sm"}
+                                                onClick={copyAddress(log.args[1])}
+                                            >
+                                                <CopyIcon />
+                                            </Button>
+                                            {log.args[2] ? "Added admin role to: " : "Removed admin role from: "}  {log.args[1]}
+                                        </Box>
+                                        <Box>
+                                            Timestamp: {formatTime(log.args[3])}
+                                        </Box>
+                                    </ Box>
+                                )}
+
+                                {log.eventName === "URRoleAdministration" && (
+                                    <Box p={2}
+                                        backgroundColor={log.args[0] ? "rgba(0, 0, 255, 0.3)" : "rgba(255, 0, 0, 0.3)"}
+                                    >
+                                        <Box>
+                                            <Button
+                                                title='Copy address'
+                                                size={"sm"}
+                                                onClick={copyAddress(log.args[1])}
+                                            >
+                                                <CopyIcon />
+                                            </Button>
+                                            {log.args[2] ? "Added University Representative role to: " : "Removed University Representative role from: "}  {log.args[1]}
+                                        </Box>
+                                        <Box>
+                                            Timestamp: {formatTime(log.args[3])}
+                                        </Box>
+                                    </ Box>
+                                )}
+                            </HStack>
+                        </Center>
                     ))}
                 </ModalBody>
                 <ModalFooter>

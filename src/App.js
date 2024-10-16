@@ -17,7 +17,7 @@ function App() {
   const [singleDiploma, setSignleDiploma] = useState(null);
   const [count, setCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [universityName, setUniversityName] = useState("");
+  const [universityName, setUniversityName] = useState('');
   const [universities, setUniversities] = useState([]);
   const [user, setUser] = useState({
     signer: null,
@@ -49,12 +49,14 @@ function App() {
       loadAccounts();
 
       const _collectionService = new CollectionService(provider);
-      _collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
-        var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
+      _collectionService
+        .getDiplomasWithPagination(currentPage, universityName)
+        .then(_list => {
+          var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
 
-        setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
-        setList(_list);
-      });
+          setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
+          setList(_list);
+        });
       setCollectionService(_collectionService);
 
       window.ethereum.on('accountsChanged', accounts => {
@@ -82,15 +84,17 @@ function App() {
         var isAdmin = false;
         var isUR = false;
 
-        const _signerService = new SignerService(
-          await provider.getSigner()
-        );
+        const _signerService = new SignerService(await provider.getSigner());
 
         await _signerService.checkAddressRoles().then(_list => {
           isAdmin = _list[0];
           isUR = _list[1];
 
-          setUniversities([..._list[2]].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
+          setUniversities(
+            [..._list[2]].sort((a, b) =>
+              a.toLowerCase().localeCompare(b.toLowerCase())
+            )
+          );
         });
 
         setSignerService(_signerService);
@@ -101,7 +105,6 @@ function App() {
           isAdmin: isAdmin,
           isUR: isUR,
         });
-
       } else {
         setUser({ signer: null, balance: 0 });
       }
@@ -128,7 +131,7 @@ function App() {
     setIsMinting(false);
   };
 
-  const handleCreateDiploma = async (data) => {
+  const handleCreateDiploma = async data => {
     setIsMinting(true);
 
     toast({
@@ -144,32 +147,40 @@ function App() {
 
     const dateStr = date.toLocaleDateString();
 
+    data.addedOn = dateStr;
+
     try {
       await uploadJSON(Date.now().toString(), data, cid => {
         if (signerService) {
-
-          signerService.addDiploma(dateStr, cid, data.universityName).then(tx => {
+          signerService.addDiploma(cid, data.universityName).then(tx => {
             setIsMinting(false);
 
             provider.once(tx.hash, () => {
               toast({
                 title: 'Your Diploma NFT is created!',
                 status: 'success',
-                description:
-                  'You will see your new Diploma NFT soon',
+                description: 'You will see your new Diploma NFT soon',
               });
 
-              // Loading all the diplomas again 
+              // Loading all the diplomas again
               // and show new one it if there is space on the page
-              collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
-                var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
+              collectionService
+                .getDiplomasWithPagination(currentPage, universityName)
+                .then(_list => {
+                  var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
 
-                setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
-                setList(_list);
-              });
+                  setCount(
+                    numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0
+                  );
+                  setList(_list);
+                });
 
               signerService.checkAddressRoles().then(_list => {
-                setUniversities([..._list[2]].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
+                setUniversities(
+                  [..._list[2]].sort((a, b) =>
+                    a.toLowerCase().localeCompare(b.toLowerCase())
+                  )
+                );
               });
             });
           });
@@ -202,19 +213,23 @@ function App() {
 
     try {
       if (signerService) {
-
         await signerService.suspendDiploma(diplomaID, comment).then(tx => {
           provider.once(tx.hash, () => {
             toast({
-              title: 'Diploma with ID: ' + diplomaID.toString() + ' is rejected/suspended.',
+              title:
+                'Diploma with ID: ' +
+                diplomaID.toString() +
+                ' is rejected/suspended.',
               status: 'error',
             });
 
-            // Loading all the diplomas again 
+            // Loading all the diplomas again
             // to show changes
-            collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
-              setList(_list);
-            });
+            collectionService
+              .getDiplomasWithPagination(currentPage, universityName)
+              .then(_list => {
+                setList(_list);
+              });
           });
         });
       }
@@ -235,7 +250,7 @@ function App() {
     }
   };
 
-  const handleAcceptDiploma = async (diplomaID) => {
+  const handleAcceptDiploma = async diplomaID => {
     toast({
       title: 'The diploma acceptance process has begun.',
       status: 'info',
@@ -243,19 +258,21 @@ function App() {
 
     try {
       if (signerService) {
-
         await signerService.acceptDiploma(diplomaID).then(tx => {
           provider.once(tx.hash, () => {
             toast({
-              title: 'Diploma with ID: ' + diplomaID.toString() + ' is accepted.',
+              title:
+                'Diploma with ID: ' + diplomaID.toString() + ' is accepted.',
               status: 'success',
             });
 
-            // Loading all the diplomas again 
+            // Loading all the diplomas again
             // to show changes
-            collectionService.getDiplomasWithPagination(currentPage, universityName).then(_list => {
-              setList(_list);
-            });
+            collectionService
+              .getDiplomasWithPagination(currentPage, universityName)
+              .then(_list => {
+                setList(_list);
+              });
           });
         });
       }
@@ -276,7 +293,7 @@ function App() {
     }
   };
 
-  const handleAddAdmin = async (address) => {
+  const handleAddAdmin = async address => {
     toast({
       title: 'New admin is being added.',
       status: 'info',
@@ -284,7 +301,6 @@ function App() {
 
     try {
       if (signerService) {
-
         await signerService.addAdmin(address).then(tx => {
           provider.once(tx.hash, () => {
             toast({
@@ -311,7 +327,7 @@ function App() {
     }
   };
 
-  const handleRemoveAdmin = async (address) => {
+  const handleRemoveAdmin = async address => {
     toast({
       title: 'Admin is being removed.',
       status: 'error',
@@ -319,7 +335,6 @@ function App() {
 
     try {
       if (signerService) {
-
         await signerService.removeAdmin(address).then(tx => {
           provider.once(tx.hash, () => {
             toast({
@@ -346,7 +361,7 @@ function App() {
     }
   };
 
-  const handleAddUR = async (address) => {
+  const handleAddUR = async address => {
     toast({
       title: 'New university representative is being added.',
       status: 'info',
@@ -354,7 +369,6 @@ function App() {
 
     try {
       if (signerService) {
-
         await signerService.addUniversityRepresentative(address).then(tx => {
           provider.once(tx.hash, () => {
             toast({
@@ -381,7 +395,7 @@ function App() {
     }
   };
 
-  const handleRemoveUR = async (address) => {
+  const handleRemoveUR = async address => {
     toast({
       title: 'University representative is being removed.',
       status: 'info',
@@ -389,7 +403,6 @@ function App() {
 
     try {
       if (signerService) {
-
         await signerService.removeUniversityRepresentative(address).then(tx => {
           provider.once(tx.hash, () => {
             toast({
@@ -416,7 +429,7 @@ function App() {
     }
   };
 
-  const getDiplomaByID = async (diplomaID) => {
+  const getDiplomaByID = async diplomaID => {
     toast({
       title: 'Searching for diploma with ID:' + diplomaID,
       status: 'loading',
@@ -425,27 +438,22 @@ function App() {
 
     try {
       if (collectionService) {
-
         await collectionService.getDiplomaByID(diplomaID).then(_diploma => {
-
           if (_diploma[0].universityName === '') {
-
             toast.closeAll();
 
             toast({
-              title: 'Diploma with ID:' + diplomaID + " does not exist.",
+              title: 'Diploma with ID:' + diplomaID + ' does not exist.',
               status: 'error',
             });
           } else {
             toast({
-              title: 'Diploma with ID:' + diplomaID + " is found.",
+              title: 'Diploma with ID:' + diplomaID + ' is found.',
               status: 'success',
             });
 
             setSignleDiploma(_diploma);
-
           }
-
         });
       }
     } catch (error) {
@@ -467,9 +475,9 @@ function App() {
 
   const showAllDiplomasAgain = () => {
     setSignleDiploma(null);
-  }
+  };
 
-  const changeUniversityFilter = (universityName) => {
+  const changeUniversityFilter = universityName => {
     setUniversityName(universityName);
 
     toast({
@@ -479,15 +487,17 @@ function App() {
       duration: 4000,
     });
 
-    collectionService.getDiplomasWithPagination(1, universityName).then(_list => {
-      var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
+    collectionService
+      .getDiplomasWithPagination(1, universityName)
+      .then(_list => {
+        var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
 
-      setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
-      setList(_list);
-    });
-  }
+        setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
+        setList(_list);
+      });
+  };
 
-  const changePage = (page) => {
+  const changePage = page => {
     // setCurrentPage(page);
 
     toast({
@@ -497,27 +507,28 @@ function App() {
       duration: 2000,
     });
 
-    collectionService.getDiplomasWithPagination(page, universityName).then(_list => {
-      if (_list.length >= 1) {
-        setList(_list);
-      } else {
-        toast.closeAll();
-        toast({
-          status: 'error',
-          description: 'There are no diplomas available for display on the selected page.',
-          duration: 5000,
-        });
-      }
-    });
-  }
+    collectionService
+      .getDiplomasWithPagination(page, universityName)
+      .then(_list => {
+        if (_list.length >= 1) {
+          setList(_list);
+        } else {
+          toast.closeAll();
+          toast({
+            status: 'error',
+            description:
+              'There are no diplomas available for display on the selected page.',
+            duration: 5000,
+          });
+        }
+      });
+  };
 
-  const logSearch = async (address) => {
+  const logSearch = async address => {
     if (signerService) {
-
       return await signerService.getLogs(address);
     }
-  } 
-  
+  };
 
   return (
     <>
@@ -537,17 +548,19 @@ function App() {
         logSearch={logSearch}
       />
 
-      {count > 0 && <DiplomasDisplay
-        list={list}
-        singleDiploma={singleDiploma}
-        user={user}
-        handleRejectDiploma={handleRejectDiploma}
-        handleAcceptDiploma={handleAcceptDiploma}
-        count={count}
-        showAllDiplomasAgain={showAllDiplomasAgain}
-        changePage={changePage}
-        logSearch={logSearch}
-      />}
+      {count > 0 && (
+        <DiplomasDisplay
+          list={list}
+          singleDiploma={singleDiploma}
+          user={user}
+          handleRejectDiploma={handleRejectDiploma}
+          handleAcceptDiploma={handleAcceptDiploma}
+          count={count}
+          showAllDiplomasAgain={showAllDiplomasAgain}
+          changePage={changePage}
+          logSearch={logSearch}
+        />
+      )}
 
       {count === 0 && (
         <HStack

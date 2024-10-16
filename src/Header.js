@@ -67,6 +67,39 @@ const Header = ({
         duration: 3000,
     });
 
+    const handleSearch = () => {
+        var searchID = Number(searchValue);
+        if (searchID < 0) {
+            toast(
+                {
+                    title: 'DiplomaID cannot be negative!',
+                    status: 'error',
+                    duration: 2000,
+                }
+            );
+        } else {
+            getDiplomaByID(searchValue);
+        }
+    }
+
+    const onEnterPressed = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+
+            if (Number(e.target.value) < 0) {
+                toast(
+                    {
+                        title: 'DiplomaID cannot be negative!',
+                        status: 'error',
+                        duration: 2000,
+                    }
+                );
+            } else {
+                getDiplomaByID(searchValue);
+            }
+        }
+    }
+
     return (
         <Flex
             w={'100%'}
@@ -82,6 +115,7 @@ const Header = ({
                     <Button
                         colorScheme='cyan'
                         size={{ base: 'md', md: 'lg', lg: 'lg' }}
+                        variant={'outline'}
                         w={200}
                         m={2}
                         alignItems={'center'}
@@ -100,7 +134,6 @@ const Header = ({
                             colorScheme='teal'
                             variant='outline'
                             size={{ base: 'md', md: 'md', lg: 'md' }}
-                            // w={145}
                             alignItems={'center'}
                             onClick={() => {
                                 setManagingAdmin(true);
@@ -152,11 +185,16 @@ const Header = ({
             </HStack>
             <HStack>
                 <Input
+                    minLength={1}
                     borderRadius={"20px 0 0 20px"}
                     ml={user.isAdmin ? 43 : user.isUR ? 160 : 385}
                     mr={-2}
                     type="number"
                     placeholder="Search diploma by ID"
+                    onKeyDown={(e) => {
+                        setSearchValue(e.target.value);
+                        onEnterPressed(e);
+                    }}
                     onChange={(e) => {
                         setSearchValue(e.target.value);
                     }}
@@ -164,18 +202,7 @@ const Header = ({
                 <Button
                     borderRadius={"0 20px 20px 0"}
                     onClick={() => {
-                        var searchID = Number(searchValue);
-                        if (searchID < 0) {
-                            toast(
-                                {
-                                    title: 'DiplomaID cannot be negative!',
-                                    status: 'error',
-                                    duration: 2000,
-                                }
-                            )
-                        } else {
-                            getDiplomaByID(searchID);
-                        }
+                        handleSearch();
                     }}
                 >
                     <Search2Icon mr={1} />
@@ -186,7 +213,7 @@ const Header = ({
                 {user.signer && <Text>{formatAddress}</Text>}
                 {user.signer && <Text>{formatBalance}</Text>}
             </VStack>
-            {/* <ColorModeSwitcher></ColorModeSwitcher> */}
+
             <Button
                 ml={3}
                 isDisabled={isDisabled}
