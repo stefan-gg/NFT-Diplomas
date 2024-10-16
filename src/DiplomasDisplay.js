@@ -49,8 +49,6 @@ const DiplomasDisplay = ({
     const [address, setAddress] = useState(null);
     const [logs, setLogs] = useState([]);
 
-    const _list = list;
-
     const toast = useToast({
         position: 'top',
         isClosable: true,

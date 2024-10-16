@@ -1,5 +1,5 @@
 import { BrowserProvider } from 'ethers';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { HStack, Spinner, useToast, Text } from '@chakra-ui/react';
 
 import Header from './Header';
@@ -498,7 +498,7 @@ function App() {
   };
 
   const changePage = page => {
-    // setCurrentPage(page);
+    setCurrentPage(page);
 
     toast({
       title: 'Diploma filter applied!',
