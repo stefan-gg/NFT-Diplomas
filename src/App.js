@@ -520,8 +520,8 @@ function App() {
   };
 
   const logSearch = async address => {
-    if (signerService) {
-      return await signerService.getLogs(address);
+    if (collectionService) {
+      return await collectionService.getLogs(address);
     }
   };
 

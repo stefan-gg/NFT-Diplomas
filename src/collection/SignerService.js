@@ -41,39 +41,4 @@ export default class CollectionService {
     async removeUniversityRepresentative(address) {
         return await this.contract.removeUniversityRepresentative(address);
     }
-
-    async getLogs(address) {
-        const adminFilter = this.contract.filters.AdminRoleAdministration(address);
-        const adminRoleEvents = await this.contract.queryFilter(
-            adminFilter,
-            0,
-            'latest'
-        );
-
-        const urFilter = this.contract.filters.URRoleAdministration(address);
-        const urRoleEvents = await this.contract.queryFilter(urFilter, 0, 'latest');
-
-        const diplomaCreationFilter =
-            this.contract.filters.DiplomaCreation(address);
-        const diplomaCreationEvents = await this.contract.queryFilter(
-            diplomaCreationFilter,
-            0,
-            'latest'
-        );
-
-        const diplomaVerificationFilter =
-            this.contract.filters.DiplomaVerification(address);
-        const diplomaVerificationEvents = await this.contract.queryFilter(
-            diplomaVerificationFilter,
-            0,
-            'latest'
-        );
-
-        return [
-            ...adminRoleEvents,
-            ...urRoleEvents,
-            ...diplomaCreationEvents,
-            ...diplomaVerificationEvents,
-        ];
-    }
 }
