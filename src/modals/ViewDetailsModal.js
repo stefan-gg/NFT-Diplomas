@@ -40,7 +40,7 @@ const ViewDetailsModal = ({
         duration: 3000,
     });
 
-    const copyAddress = (diplomaNFT) => {
+    const copyAddress = diplomaNFT => {
         return async () => {
             try {
                 if (diplomaNFT[7] !== '0x0000000000000000000000000000000000000000') {
@@ -65,7 +65,7 @@ const ViewDetailsModal = ({
                 });
             }
         };
-    }
+    };
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -92,8 +92,8 @@ const ViewDetailsModal = ({
 
                         <Box mt={5}>
                             <Button
-                                title='Copy address'
-                                size={"sm"}
+                                title="Copy address"
+                                size={'sm'}
                                 onClick={async () => {
                                     try {
                                         await navigator.clipboard.writeText(diplomaNFT[6]);
@@ -117,13 +117,17 @@ const ViewDetailsModal = ({
                         </Box>
                         <Box mb={5}>
                             <Button
-                                title='Copy address'
-                                size={"sm"}
+                                title="Copy address"
+                                size={'sm'}
                                 onClick={copyAddress(diplomaNFT)}
                             >
                                 <CopyIcon />
                             </Button>
-                            {diplomaNFT[1] ? "Accepted by:" : "Rejeted by:"} {ethers.isAddress(diplomaNFT[7]) ? diplomaNFT[7] : 'Diploma is not accepted/rejected yet'}
+                            {diplomaNFT[1] ? 'Accepted by:' : 'Rejeted by:'}{' '}
+                            {ethers.isAddress(diplomaNFT[7]) &&
+                                ethers.ZeroAddress !== diplomaNFT[7]
+                                ? diplomaNFT[7]
+                                : 'Diploma is not accepted/rejected yet'}
                         </Box>
 
                         <HStack>
@@ -213,7 +217,7 @@ const ViewDetailsModal = ({
                                 <>
                                     <FormLabel>Comment for diploma rejection: </FormLabel>
                                     <Textarea
-                                        resize='none'
+                                        resize="none"
                                         maxLength={150}
                                         placeholder="Reason why is the diploma invalid"
                                         onChange={e => setComment(e.target.value)}

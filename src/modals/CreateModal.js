@@ -155,6 +155,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
 
                     <FormLabel fontSize="md">University name</FormLabel>
                     <Input
+                      minLength={2}
                       onChange={e => {
                         setFormData({
                           ...formData,

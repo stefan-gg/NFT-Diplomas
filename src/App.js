@@ -23,7 +23,7 @@ function App() {
     signer: null,
     balance: 0,
     isAdmin: false,
-    isUR: false, //is the user University Representative -> meaning he can add new diplomas
+    isUR: false, //is the user University Representative -> meaning he can add new diplomas and look at the address logs
   });
   const [isConnecting, setIsConnecting] = useState(false);
 
@@ -52,7 +52,7 @@ function App() {
       _collectionService
         .getDiplomasWithPagination(currentPage, universityName)
         .then(_list => {
-          var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
+          const numberOfDiplomas = Number(_list[0].numberOfDiplomas);
 
           setCount(numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0);
           setList(_list);
@@ -144,9 +144,7 @@ function App() {
     data.universityLogo = logoCID;
 
     const date = new Date();
-
     const dateStr = date.toLocaleDateString();
-
     data.addedOn = dateStr;
 
     try {
@@ -159,20 +157,17 @@ function App() {
               toast({
                 title: 'Your Diploma NFT is created!',
                 status: 'success',
-                description: 'You will see your new Diploma NFT soon',
+                description: 'You will see your Diploma ID soon',
               });
 
-              // Loading all the diplomas again
-              // and show new one it if there is space on the page
+              // Getting the number of diplomas
+              // and showing the new diploma
               collectionService
                 .getDiplomasWithPagination(currentPage, universityName)
                 .then(_list => {
                   var numberOfDiplomas = Number(_list[0].numberOfDiplomas);
 
-                  setCount(
-                    numberOfDiplomas > 0 ? Math.ceil(numberOfDiplomas / 6) : 0
-                  );
-                  setList(_list);
+                  getDiplomaByID(numberOfDiplomas - 1);
                 });
 
               signerService.checkAddressRoles().then(_list => {
