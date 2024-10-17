@@ -88,10 +88,12 @@ const DiplomasDisplay = ({
                     paddingTop: '100px',
                 }}
             ></div>
+
             <PageChoices
                 count={count}
                 changePage={changePage}
             />
+            
             {singleDiploma && (
                 <Center>
                     <Button colorScheme="red" onClick={() => showAllDiplomasAgain()}>

@@ -540,7 +540,6 @@ function App() {
         getDiplomaByID={getDiplomaByID}
         universities={universities}
         changeUniversityFilter={changeUniversityFilter}
-        logSearch={logSearch}
       />
 
       {count > 0 && (

@@ -31,7 +31,7 @@ export default class CollectionService {
         const data = [await this.contract.getDiplomaByID(diplomaID)];
 
         // We check if the University name exists,
-        // if it is then there is no diploma with the diplomaID
+        // if it is emptyString then there is no diploma with the diplomaID
         // that matches diplomaID from the search input.
         if (data[0].universityName === '') {
             return {...data};

@@ -4,7 +4,6 @@ pragma solidity 0.8.19;
 contract DiplomasContract {
     uint256 private count;
     uint256 private numOfUniversities;
-    uint256 private adminCount;
 
     struct Diploma {
         uint256 diplomaID;

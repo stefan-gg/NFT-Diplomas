@@ -222,6 +222,7 @@ const Header = ({
             >
                 {isDisabled ? 'Connected' : 'Connect'}
             </Button>
+            
             <CreateModal
                 isOpen={isCreateOpen}
                 onClose={onCreateClose}
