@@ -69,10 +69,10 @@ const Header = ({
 
     const handleSearch = () => {
         var searchID = Number(searchValue);
-        if (searchID < 0) {
+        if (searchID < 0 || searchID > Number.MIN_SAFE_INTEGER) {
             toast(
                 {
-                    title: 'DiplomaID cannot be negative!',
+                    title: 'Invalid DiplomaID!',
                     status: 'error',
                     duration: 2000,
                 }
@@ -186,6 +186,7 @@ const Header = ({
             <HStack>
                 <Input
                     minLength={1}
+                    step={1}
                     borderRadius={"20px 0 0 20px"}
                     ml={user.isAdmin ? 43 : user.isUR ? 160 : 385}
                     mr={-2}

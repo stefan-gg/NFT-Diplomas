@@ -10,22 +10,6 @@ export default class CollectionService {
             provider);
     }
 
-    async getDiplomas() {
-        const data = await this.contract.getDiplomas();
-
-        const diplomas = await Promise.all(
-            data.map(async (diploma) => {
-                const metadata = await getMetadata(diploma.diplomaIPFSLink);
-
-                return {
-                    ...diploma,
-                    ...metadata,
-                };
-            })
-        );
-        return diplomas;
-    }
-
     async getDiplomaByID(diplomaID) {
 
         const data = [await this.contract.getDiplomaByID(diplomaID)];

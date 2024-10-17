@@ -1,7 +1,7 @@
 import { Contract } from 'ethers';
 import abi from './abi.json';
 
-export default class CollectionService {
+export default class SignerService {
     constructor(signer) {
         this.contract = new Contract(
             '0x699aa2A82313e7e3edDc4a0b8DBcbc5aE2c56F1c',
