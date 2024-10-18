@@ -120,7 +120,7 @@ const LogsModal = ({
 
                                 {log.eventName === "URRoleAdministration" && (
                                     <Box p={2}
-                                        backgroundColor={log.args[0] ? "rgba(0, 0, 255, 0.3)" : "rgba(255, 0, 0, 0.3)"}
+                                        backgroundColor={log.args[2] ? "rgba(0, 0, 255, 0.3)" : "rgba(255, 0, 0, 0.3)"}
                                     >
                                         <Box>
                                             <Button
@@ -142,7 +142,7 @@ const LogsModal = ({
                     ))}
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={onClose}>Close detail view</Button>
+                    <Button onClick={onClose}>Close logs</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

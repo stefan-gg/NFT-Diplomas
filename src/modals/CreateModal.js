@@ -216,7 +216,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                       <option>Postdoctoral Studies</option>
                     </Select>
 
-                    <FormLabel fontSize="md">Study duration</FormLabel>
+                    <FormLabel fontSize="md">Duration of the study program</FormLabel>
                     <Select
                       onChange={e => {
                         setFormData({
@@ -232,6 +232,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                       <option>2 years</option>
                       <option>3 years</option>
                       <option>4 years</option>
+                      <option>5+ years</option>
                     </Select>
 
                     <FormLabel fontSize="md">

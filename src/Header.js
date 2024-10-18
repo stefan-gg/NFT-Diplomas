@@ -10,7 +10,7 @@ import {
     Input,
     useToast,
 } from '@chakra-ui/react';
-import { Search2Icon } from '@chakra-ui/icons'
+import { Search2Icon } from '@chakra-ui/icons';
 import { ethers } from 'ethers';
 
 import CreateModal from './modals/CreateModal';
@@ -29,7 +29,7 @@ const Header = ({
     handleRemoveUR,
     getDiplomaByID,
     universities,
-    changeUniversityFilter
+    changeUniversityFilter,
 }) => {
     const {
         isOpen: isCreateOpen,
@@ -69,36 +69,35 @@ const Header = ({
 
     const handleSearch = () => {
         var searchID = Number(searchValue);
-        if (searchID < 0 || searchID > Number.MIN_SAFE_INTEGER) {
-            toast(
-                {
-                    title: 'Invalid DiplomaID!',
-                    status: 'error',
-                    duration: 2000,
-                }
-            );
+        if (searchID < 0 || searchID > Number.MAX_SAFE_INTEGER) {
+            toast({
+                title: 'Invalid Diploma ID!',
+                status: 'error',
+                duration: 2000,
+            });
         } else {
-            getDiplomaByID(searchValue);
+            getDiplomaByID(searchID);
         }
-    }
+    };
 
-    const onEnterPressed = (e) => {
+    const onEnterPressed = e => {
         if (e.key === 'Enter') {
             e.preventDefault();
 
-            if (Number(e.target.value) < 0) {
-                toast(
-                    {
-                        title: 'DiplomaID cannot be negative!',
-                        status: 'error',
-                        duration: 2000,
-                    }
-                );
+            if (
+                Number(e.target.value) < 0 ||
+                Number(e.target.value) > Number.MAX_SAFE_INTEGER
+            ) {
+                toast({
+                    title: 'Invalid Diploma ID!',
+                    status: 'error',
+                    duration: 2000,
+                });
             } else {
-                getDiplomaByID(searchValue);
+                getDiplomaByID(Number(e.target.value));
             }
         }
-    }
+    };
 
     return (
         <Flex
@@ -110,10 +109,10 @@ const Header = ({
             zIndex={100}
             alignItems={'center'}
         >
-            <HStack >
+            <HStack>
                 {user.isUR && (
                     <Button
-                        colorScheme='cyan'
+                        colorScheme="cyan"
                         size={{ base: 'md', md: 'lg', lg: 'lg' }}
                         variant={'outline'}
                         w={200}
@@ -129,10 +128,10 @@ const Header = ({
                 )}
 
                 {user.isAdmin && (
-                    <HStack mr={15} ml={-5} >
+                    <HStack mr={15} ml={-5}>
                         <Button
-                            colorScheme='teal'
-                            variant='outline'
+                            colorScheme="teal"
+                            variant="outline"
                             size={{ base: 'md', md: 'md', lg: 'md' }}
                             alignItems={'center'}
                             onClick={() => {
@@ -147,10 +146,9 @@ const Header = ({
                         </Button>
 
                         <Button
-                            colorScheme='blue'
-                            variant='outline'
+                            colorScheme="blue"
+                            variant="outline"
                             size={{ base: 'md', md: 'md', lg: 'md' }}
-                            // w={130}
                             alignItems={'center'}
                             onClick={() => {
                                 setManagingUR(true);
@@ -165,43 +163,43 @@ const Header = ({
                     </HStack>
                 )}
 
-                <Select
-                    w={170}
-                    onChange={(e) => changeUniversityFilter(e.target.value)}
-                >
+                <Select w={170} onChange={e => changeUniversityFilter(e.target.value)}>
                     <option
                         key={''}
                         value={''}
-                        title='This options displays all diplomas'>
-                        {user.signer ? 'Select University'
+                        title="This options displays all diplomas"
+                    >
+                        {user.signer
+                            ? 'Select University'
                             : 'You must connect wallet in order to filter universities'}
                     </option>
-                    {universities && universities.map((option) => (
-                        <option key={option} value={option}>
-                            {option}
-                        </option>
-                    ))}
+                    {universities &&
+                        universities.map(option => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
                 </Select>
             </HStack>
             <HStack>
                 <Input
                     minLength={1}
                     step={1}
-                    borderRadius={"20px 0 0 20px"}
+                    borderRadius={'20px 0 0 20px'}
                     ml={user.isAdmin ? 43 : user.isUR ? 160 : 385}
                     mr={-2}
                     type="number"
                     placeholder="Search diploma by ID"
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                         setSearchValue(e.target.value);
                         onEnterPressed(e);
                     }}
-                    onChange={(e) => {
+                    onChange={e => {
                         setSearchValue(e.target.value);
                     }}
                 />
                 <Button
-                    borderRadius={"0 20px 20px 0"}
+                    borderRadius={'0 20px 20px 0'}
                     onClick={() => {
                         handleSearch();
                     }}
@@ -223,23 +221,20 @@ const Header = ({
             >
                 {isDisabled ? 'Connected' : 'Connect'}
             </Button>
-            
+
             <CreateModal
                 isOpen={isCreateOpen}
                 onClose={onCreateClose}
                 onCreate={handleCreateDiploma}
-            >
-            </CreateModal>
+            ></CreateModal>
 
             <RoleManagementModal
                 isOpen={isRoleModalOpen}
-                onClose={
-                    () => {
-                        setManagingUR(false);
-                        setManagingAdmin(false);
-                        onRoleModalClose();
-                    }
-                }
+                onClose={() => {
+                    setManagingUR(false);
+                    setManagingAdmin(false);
+                    onRoleModalClose();
+                }}
                 managingAdmin={managingAdmin}
                 managingUR={managingUR}
                 handleCreateDiploma={handleCreateDiploma}
@@ -247,8 +242,7 @@ const Header = ({
                 handleRemoveAdmin={handleRemoveAdmin}
                 handleAddUR={handleAddUR}
                 handleRemoveUR={handleRemoveUR}
-            >
-            </RoleManagementModal>
+            ></RoleManagementModal>
         </Flex>
     );
 };

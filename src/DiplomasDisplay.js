@@ -16,6 +16,7 @@ import {
     CheckCircleIcon,
     CheckIcon,
     CloseIcon,
+    ExternalLinkIcon,
     InfoIcon,
     QuestionIcon,
 } from '@chakra-ui/icons';
@@ -35,13 +36,14 @@ const DiplomasDisplay = ({
     count,
     showAllDiplomasAgain,
     changePage,
-    logSearch
+    logSearch,
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         isOpen: isLogsOpen,
         onOpen: onLogsOpen,
-        onClose: onLogsClose } = useDisclosure();
+        onClose: onLogsClose,
+    } = useDisclosure();
 
     const [selectedDiploma, setSelectedDiploma] = useState(null);
     const [isAcceptModal, setIsAcceptModal] = useState(null);
@@ -63,7 +65,7 @@ const DiplomasDisplay = ({
     const openLogs = addressLogs => {
         setLogs(addressLogs);
         onLogsOpen();
-    }
+    };
 
     const openAcceptModal = diploma => {
         setSelectedDiploma(diploma);
@@ -81,6 +83,21 @@ const DiplomasDisplay = ({
         list = singleDiploma;
     }
 
+    function search(address) {
+        logSearch(address).then(result => {
+            if (result.length > 0) openLogs(result);
+
+            else
+                toast({
+                    description: 'There are no logs for inserted address.',
+                    status: 'error',
+                    duration: 3000,
+                    position: 'top',
+                    isClosable: true,
+                });
+        });
+    }
+
     return (
         <>
             <div
@@ -89,11 +106,8 @@ const DiplomasDisplay = ({
                 }}
             ></div>
 
-            <PageChoices
-                count={count}
-                changePage={changePage}
-            />
-            
+            <PageChoices count={count} changePage={changePage} />
+
             {singleDiploma && (
                 <Center>
                     <Button colorScheme="red" onClick={() => showAllDiplomasAgain()}>
@@ -102,18 +116,25 @@ const DiplomasDisplay = ({
                 </Center>
             )}
 
-            {(user.isAdmin || user.isUR) && <HStack mt={4}>
-                <Input
-                    ml={5}
-                    w={'26%'}
-                    maxLength={42}
-                    onChange={(e) => setAddress(e.target.value)}
-                />
-                <Button
-                    colorScheme='blue'
-                    variant={'outline'}
-                    onClick={
-                        () => {
+            {!user.isAdmin && !user.isUR && (
+                <Box mt={4} ml={5}>
+                    Your university wants to be part of the app? Send mail to
+                    diploma@nft.com
+                </Box>
+            )}
+
+            {(user.isAdmin || user.isUR) && (
+                <HStack mt={4}>
+                    <Input
+                        ml={5}
+                        w={'26%'}
+                        maxLength={42}
+                        onChange={e => setAddress(e.target.value)}
+                    />
+                    <Button
+                        colorScheme="blue"
+                        variant={'outline'}
+                        onClick={() => {
                             if (!ethers.isAddress(address)) {
                                 toast({
                                     status: 'error',
@@ -121,36 +142,28 @@ const DiplomasDisplay = ({
                                     duration: 4000,
                                 });
                             } else {
-
                                 toast({
                                     title: 'We are searching for certain address in the logs.',
                                     status: 'loading',
                                     duration: 3000,
                                 });
-
-                                logSearch(address)
-                                    .then(result => {
-                                        if (result.length > 0)
-                                            openLogs(result);
-                                        else toast({
-                                            description: 'There are no logs for inserted address.',
-                                            status: 'error',
-                                            duration: 3000,
-                                            position: 'top',
-                                            isClosable: true,
-                                        });
-                                    })
+                                search(address);
                             }
-                        }
-                    }
-                >
-                    Check log history for this address
-                </Button>
-            </HStack>}
+                        }}
+                    >
+                        Check log history for this address
+                    </Button>
+                </HStack>
+            )}
 
-            <SimpleGrid columns={singleDiploma ? 1 : 3} spacing={5} mt={7} ml={5} mb={5}>
+            <SimpleGrid
+                columns={singleDiploma ? 1 : 3}
+                spacing={5}
+                mt={7}
+                ml={5}
+                mb={5}
+            >
                 {list.map(diplomaNFT => (
-
                     <Box
                         key={diplomaNFT[0]}
                         maxW="sm"
@@ -246,6 +259,44 @@ const DiplomasDisplay = ({
                             </Box>
 
                             <Box>GPA: {diplomaNFT.studentGPA}</Box>
+
+                            {user.isAdmin && (
+                                <Button
+                                    mt={2}
+                                    mb={2}
+                                    size={'sm'}
+                                    onClick={() => {
+                                        toast({
+                                            title: 'We are searching for address logs.',
+                                            status: 'loading',
+                                            duration: 3000,
+                                        });
+                                        search(diplomaNFT[6]);
+                                    }}
+                                >
+                                    Search UR logs <ExternalLinkIcon />
+                                </Button>
+                            )}
+
+                            {user.isAdmin && diplomaNFT[7] !== ethers.ZeroAddress 
+                                && (
+                                <Button
+                                    mt={2}
+                                    mb={2}
+                                    ml={2}
+                                    size={'sm'}
+                                    onClick={() => {
+                                        toast({
+                                            title: 'We are searching for address logs.',
+                                            status: 'loading',
+                                            duration: 3000,
+                                        });
+                                        search(diplomaNFT[7]);
+                                    }}
+                                >
+                                    Search admin logs <ExternalLinkIcon />
+                                </Button>
+                            )}
 
                             <HStack>
                                 <Button
@@ -363,8 +414,7 @@ const DiplomasDisplay = ({
                 isOpen={isLogsOpen}
                 onClose={onLogsClose}
                 logs={logs}
-            >
-            </LogsModal>
+            ></LogsModal>
         </>
     );
 };

@@ -183,7 +183,7 @@ const ViewDetailsModal = ({
                             <Kbd fontSize={'medium'}>{diplomaNFT.studentMajor}</Kbd>
                         </Text>
                         <Text>
-                            Study duration:{' '}
+                            Duration of the study program:{' '}
                             <Kbd fontSize={'medium'}>{diplomaNFT.studyDuration}</Kbd>
                         </Text>
                         <Text>Grades:</Text>
