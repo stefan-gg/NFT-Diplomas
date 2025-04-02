@@ -3,7 +3,7 @@ You can see the live version on this link: https://nft-diplomas.netlify.app/
 This version includes an admin view of the website, you can't add a diploma or change it but you can still see all actions done by a certain address, and you can see how add/remove roles form looks for adding or removing roles to addresses. <br><br>
 
 
-REQUIREMENTS: you will need a MetaMask extension (just to load diplomas, you don't need to connect to the website because even if you do you will just have a default role - regular user role)  <br><br>
+REQUIREMENTS: you will need a MetaMask extension and connect to Sepolia network (just to load diplomas, you don't need to connect to the website because even if you do you will just have a default role - regular user role)  <br><br>
 
 
 Short description of the roles:  
