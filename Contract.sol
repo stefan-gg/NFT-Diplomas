@@ -5,6 +5,7 @@ contract DiplomasContract {
     uint256 private count;
     uint256 private numOfUniversities;
 
+    //struct used for creating new Diploma and returning Diploma data
     struct Diploma {
         uint256 diplomaID;
         bool isVerified;
@@ -16,22 +17,30 @@ contract DiplomasContract {
         address adminAddress;
     }
 
+    //struct used for front-end purposes (universityNames are used for filter lists, and booleans are used for showing different user functionalities)
     struct ReturnData {
         bool isAdmin;
         bool isUniversityRepresentative;
         string[] universityNames;
     }
 
+    //Diplomas data for certain page selected on the front-end
     struct PaginationData {
         uint256 numOfDiplomas;
         Diploma[] diplomas;
     }
 
+    //mappings for roles
     mapping(address => bool) private admins;
     mapping(address => bool) private universityRepresentatives;
+
+    //mapping Diploma to a unique integer value
     mapping(uint256 => Diploma) private diplomas;
 
+    //mapping each university to a unique integer value
     mapping(uint256 => string) private universityID;
+
+    //mapping university id to all Diplomas that are related to that university
     mapping(string => uint256[]) universityDiplomas;
 
     event DiplomaCreation(address indexed sender, uint256 diplomaID, uint256 timestamp);
@@ -45,6 +54,7 @@ contract DiplomasContract {
         admins[msg.sender] = true;
     }
 
+    //function appends cid received from the front-end to the ipfs url
     function _setTokenURI(string memory cid)
         internal
         pure
@@ -232,11 +242,13 @@ contract DiplomasContract {
         return data;
     }
 
+    //the modifier checks if the sender's address has the admin role
     modifier onlyAdmin() {
         if (!admins[msg.sender]) revert InvalidAddress(msg.sender);
         _;
     }
 
+    //the modifier checks if the sender's address has the university representative role
     modifier onlyUniversityRepresentative() {
         if (!universityRepresentatives[msg.sender])
             revert InvalidAddress(msg.sender);
